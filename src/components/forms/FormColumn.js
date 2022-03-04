@@ -33,9 +33,9 @@ function FormColumn({ item = {}, setData, sectionId, rowId, columnId }) {
       {isEmpty == true ? (
         <button
           onClick={onButtonClick}
-          className="w-full h-10 shadow px-3 py-2 text-gray-800 border rounded outline-none bg-gray-50 hover:bg-gray-100 focus:ring ring-indigo-300"
+          className="w-full h-20 shadow px-3 py-2 text-gray-800 border rounded outline-none bg-gray-200 hover:bg-gray-300 focus:ring ring-indigo-300"
         >
-          <div className="flex gap-1 items-center pr-2 cursor-pointer">
+          <div className="flex gap-1 justify-center items-center pr-2 cursor-pointer">
             <PlusIcon className="h-4 w-4" />
             <p className="text-xs">Add an Item</p>
           </div>

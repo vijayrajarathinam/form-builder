@@ -6,11 +6,16 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function DropDown({ options = [], select = {}, onClick = () => {} }) {
+export default function DropDown({ options = [], select = {}, onChange = null }) {
   const [selected, setSelected] = useState(select || options[0]);
 
+  function onSelected(sel) {
+    onChange && onChange(sel);
+    setSelected(sel);
+  }
+
   return (
-    <Listbox value={selected} onClick={onClick} onChange={setSelected} className="cursor-pointer">
+    <Listbox value={selected} onChange={onSelected} className="cursor-pointer">
       {({ open }) => (
         <>
           {/* <Listbox.Label className="block text-sm font-medium text-gray-700">Assigned to</Listbox.Label> */}
