@@ -24,34 +24,26 @@ function FormRow({ children, addColumn, sectionId, rowId }) {
 
   function onDeleteClick(e) {
     e.preventDefault();
-    // addColumn((data) => ({
-    //   sections: data.sections.filter((session, id) => {
-    //     return session.id == id ? true : false;
-    //   }),
-    // }));
-    // return;
+
     addColumn((data) => {
       return {
         sections: data.sections.map((session, sid) => {
           return {
             rows: session.rows.filter((row, rid) => {
               return sid === sectionId && rowId === rid ? false : true;
-
-              // return {
-              //   columns: row.columns.filter((column, cid) => {
-              //   }),
-              // };
             }),
           };
         }),
       };
     });
   }
+
   return (
-    <AnimatePresence>
+    <AnimatePresence exitBeforeEnter>
       <motion.div
-        initial={{ x: "-300px", opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
+        initial={{ y: "-300px", x: 0, opacity: 0 }}
+        animate={{ y: 0, x: 0, opacity: 1 }}
+        exit={{ y: "300px", x: 0, opacity: 0 }}
         className="flex w-full relative flex-col items-center gap-y-3 text-gray-500 border border-gray-300 p-3"
         onMouseEnter={() => setToggle(true)}
         onMouseLeave={() => setToggle(false)}

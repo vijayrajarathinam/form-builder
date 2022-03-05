@@ -2,6 +2,7 @@ import React from "react";
 import Modal from "./FormItemCreate";
 import { PlusIcon } from "@heroicons/react/outline";
 import CustomeInputField from "./CustomeInputField";
+import { motion, AnimatePresence } from "framer-motion";
 
 function FormColumn({ item = {}, setData, sectionId, rowId, columnId }) {
   const isEmpty = Object.keys(item).length === 0;
@@ -29,7 +30,7 @@ function FormColumn({ item = {}, setData, sectionId, rowId, columnId }) {
   }
 
   return (
-    <>
+    <motion.div initial={{ x: "300px", opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="w-full">
       {isEmpty == true ? (
         <button
           onClick={onButtonClick}
@@ -44,7 +45,7 @@ function FormColumn({ item = {}, setData, sectionId, rowId, columnId }) {
         <CustomeInputField {...item} onClick={onButtonClick} />
       )}
       <Modal show={show} item={item} handleClose={() => onModal(false)} onModalSubmit={onModalSubmit} />
-    </>
+    </motion.div>
   );
 }
 
