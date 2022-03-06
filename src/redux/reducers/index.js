@@ -1,9 +1,9 @@
 import { combineReducers } from "redux";
 
-// import courses from "./courseReducer";
+import forms from "./formReducer";
 // import authors from "./authorReducer";
 // import apiCallInProgress from "./apiStatusReducer";
 
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({ forms });
 
 export default rootReducer;

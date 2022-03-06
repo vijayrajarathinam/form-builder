@@ -1,17 +1,26 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { DocumentTextIcon, PlusCircleIcon, DotsVerticalIcon } from "@heroicons/react/outline";
+import Breadcrumb from "../commons/Breadcrumb";
 import FormSection from "./FormSection";
-import FormRow from "./FormRow";
 import FormColumn from "./FormColumn";
+import FormRow from "./FormRow";
 
-function FormComponent() {
-  const [form, setForm] = React.useState({ sections: [{ rows: [{ columns: [{}, {}] }] }] });
+function FormComponent({ formDetails = {} }) {
+  const [form, setForm] = React.useState(formDetails);
+  // { sections: [{ rows: [{ columns: [{}, {}] }] }] });
   const [toggle, toggleDropdown] = React.useState(false);
 
   return (
-    <div>
+    <motion.div initial={{ x: "300px", opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: "-300px", opacity: 0 }}>
+      <Breadcrumb
+        crumbs={[
+          { link: "/dashboard", text: "dashboard" },
+          { link: "/settings", text: "settings" },
+        ]}
+      />
       <div className="flex justify-between mt-5">
-        <h3 className="font-bold text-3xl">Onboarding Form Builder</h3>
+        <h3 className="font-bold text-3xl">Form Builder</h3>
         <div className="flex gap-x-2">
           <button className="h-10 md:h-15 inline-flex items-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline">
             <PlusCircleIcon className="w-4 h-4" />
@@ -74,19 +83,28 @@ function FormComponent() {
           <p className="self-start text-sm">Please fill all the required fields</p>
         </div>
 
-        {form.sections.map((section, sid) => (
-          <FormSection key={sid} sectionId={sid} addRow={setForm}>
-            {section.rows.map((row, rid) => (
-              <FormRow key={rid} sectionId={sid} rowId={rid} addColumn={setForm}>
-                {row.columns.map((column, cid) => (
-                  <FormColumn item={column} sectionId={sid} rowId={rid} columnId={cid} setData={setForm} key={cid} />
+        {form.sections &&
+          form.sections.map((section, sid) => (
+            <FormSection key={sid} sectionId={sid} addRow={setForm}>
+              {form.rows &&
+                section.rows.map((row, rid) => (
+                  <FormRow key={rid} sectionId={sid} rowId={rid} addColumn={setForm}>
+                    {row.columns.map((column, cid) => (
+                      <FormColumn
+                        item={column}
+                        sectionId={sid}
+                        rowId={rid}
+                        columnId={cid}
+                        setData={setForm}
+                        key={cid}
+                      />
+                    ))}
+                  </FormRow>
                 ))}
-              </FormRow>
-            ))}
-          </FormSection>
-        ))}
+            </FormSection>
+          ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
 

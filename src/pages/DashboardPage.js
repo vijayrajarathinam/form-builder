@@ -17,7 +17,6 @@ import Header from "../components/commons/Header";
 import { ThemeContext } from "../contextProvider/ThemeContextProvider";
 
 import "./Dashboard.css";
-import FormComponent from "../components/forms/FormComponent";
 
 const spring = {
   type: "spring",
@@ -114,8 +113,6 @@ function Sidebar({ onSidebarHide, showSidebar }) {
   );
 }
 function MenuItem({ item: { id, title, notifications, icon: Icon, route }, onClick, selected }) {
-  // const onRouteClick = () => Router.push(route);
-
   return (
     <div
       className={clsx(
@@ -130,7 +127,7 @@ function MenuItem({ item: { id, title, notifications, icon: Icon, route }, onCli
       <div className="block sm:hidden xl:block ml-2">{title}</div>
       <div className="block sm:hidden xl:block flex-grow" />
       {notifications && (
-        <div className="flex sm:hidden xl:flex bg-pink-600 w-5 h-5 items-center justify-center rounded-full mr-2">
+        <div className="flex sm:hidden xl:flex bg-pink-600  w-5 h-5 items-center justify-center rounded-full mr-2">
           <div className="text-white text-sm">{notifications}</div>
         </div>
       )}
@@ -145,8 +142,7 @@ function Content({ user, onSidebarHide }) {
       <div className="h-screen flex-grow overflow-x-hidden overflow-auto flex flex-wrap content-start ">
         <Header user={user} IconButton={IconButton} onSidebarHide={onSidebarHide} />
         <div className="py-2 px-4 sm:px-10 w-full">
-          <h1>Settings</h1>
-          <FormComponent />
+          <h1>Dashboard</h1>
         </div>
       </div>
     </div>

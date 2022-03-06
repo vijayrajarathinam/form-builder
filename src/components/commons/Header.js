@@ -64,7 +64,8 @@ const Modal = ({ handleClose, show, username }) => {
 
 function Header({ IconButton, onSidebarHide }) {
   const [show, onModal] = useState(false);
-  const [users, setUsers] = useState({ name: "" });
+  // const [users, setUsers] = useState({ name: "" });
+  const users = {};
   //   const [user, setUser] = useState({});
 
   //   const usersCollection = collection(db, "users");
@@ -115,7 +116,7 @@ function Header({ IconButton, onSidebarHide }) {
           </div>
         </div>
       </div>
-      <Modal show={show} handleClose={() => onModal((s) => !s)} username={users?.name || ""} />
+      <Modal show={show} handleClose={() => onModal((s) => !s)} username={users?.name || "user"} />
     </div>
   );
 }
