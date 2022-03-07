@@ -7,17 +7,23 @@ function FormRow({ children, addColumn, sectionId, rowId }) {
 
   function onAddClick(e) {
     e.preventDefault();
+    //{ sections: [{ name, rows: [{ columns: [{}]  }] }] }
 
     addColumn((data) => {
+      console.log(data);
       return {
-        sections: data.sections.map((session, sid) => {
-          return {
-            rows: session.rows.map((row, rid) => {
-              const columns = sid === sectionId && rowId === rid ? [...row.columns, {}] : row.columns;
-              return { columns };
-            }),
-          };
-        }),
+        ...data,
+        struct: {
+          sections: data.struct.sections.map((session, sid) => {
+            return {
+              name: session.name,
+              rows: session.rows.map((row, rid) => {
+                const columns = sid === sectionId && rowId === rid ? [...row.columns, {}] : row.columns;
+                return { columns };
+              }),
+            };
+          }),
+        },
       };
     });
   }
@@ -27,13 +33,16 @@ function FormRow({ children, addColumn, sectionId, rowId }) {
 
     addColumn((data) => {
       return {
-        sections: data.sections.map((session, sid) => {
-          return {
-            rows: session.rows.filter((row, rid) => {
-              return sid === sectionId && rowId === rid ? false : true;
-            }),
-          };
-        }),
+        ...data,
+        struct: {
+          sections: data.struct.sections.map((session, sid) => {
+            return {
+              rows: session.rows.filter((row, rid) => {
+                return sid === sectionId && rowId === rid ? false : true;
+              }),
+            };
+          }),
+        },
       };
     });
   }

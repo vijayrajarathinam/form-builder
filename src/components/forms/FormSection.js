@@ -1,26 +1,36 @@
 import React from "react";
 import { PlusIcon, TrashIcon } from "@heroicons/react/outline";
 
-function FormSection({ children, sectionId, addRow }) {
+function FormSection({ children, name = "Sections", sectionId, addRow }) {
   const [toggle, setToggle] = React.useState(false);
 
   function onAddClick(e) {
     e.preventDefault();
+    //{ sections: [{ name, rows: [{ columns: [{}]  }] }] }
     addRow((data) => ({
-      sections: data.sections.map((session) => {
-        return {
-          rows: [...session.rows.map((row) => row), { columns: [{}] }],
-        };
-      }),
+      ...data,
+      struct: {
+        sections: data.struct.sections.map((section, id) => {
+          if (id === sectionId)
+            return {
+              name: section.name,
+              rows: [...section.rows.map((row) => row), { columns: [{}] }],
+            };
+          else return section;
+        }),
+      },
     }));
   }
 
   function onDeleteClick(e) {
     e.preventDefault();
     addRow((data) => ({
-      sections: data.sections.filter((session, id) => {
-        return session.id == id ? true : false;
-      }),
+      ...data,
+      struct: {
+        sections: data.struct.sections.filter((session, id) => {
+          return sectionId == id ? false : true;
+        }),
+      },
     }));
   }
 
@@ -41,7 +51,7 @@ function FormSection({ children, sectionId, addRow }) {
         </div>
         <TrashIcon onClick={onDeleteClick} className="h-4 w-4 cursor-pointer" />
       </div>
-      <h2 className="text-xl self-start">Section {sectionId + 1}</h2>
+      <h2 className="text-xl self-start capitalize">{name}</h2>
       {children}
     </div>
   );

@@ -12,20 +12,44 @@ function FormColumn({ item = {}, setData, sectionId, rowId, columnId }) {
     onModal(true);
   }
 
+  // function onAddClick(e) {
+  //   e.preventDefault();
+  //   //{ sections: [{ name, rows: [{ columns: [{}]  }] }] }
+  //   addRow((data) => ({
+  //     ...data,
+  //     struct: {
+  //       sections: data.struct.sections.map((section, id) => {
+  //         if (id === sectionId)
+  //           return {
+  //             name: section.name,
+  //             rows: [...section.rows.map((row) => row), { columns: [{}] }],
+  //           };
+  //         else return section;
+  //       }),
+  //     },
+  //   }));
+  // }
+
   function onModalSubmit(item) {
-    setData((data) => ({
-      sections: data.sections.map((session, sid) => {
-        return {
-          rows: session.rows.map((row, rid) => {
+    setData((data) => {
+      return {
+        ...data,
+        struct: {
+          sections: data.struct.sections.map((session, sid) => {
             return {
-              columns: row.columns.map((column, cid) => {
-                return sid === sectionId && rowId === rid && columnId === cid ? item : column;
+              name: session.name,
+              rows: session.rows.map((row, rid) => {
+                return {
+                  columns: row.columns.map((column, cid) => {
+                    return sid === sectionId && rowId === rid && columnId === cid ? item : column;
+                  }),
+                };
               }),
             };
           }),
-        };
-      }),
-    }));
+        },
+      };
+    });
     onModal(false);
   }
 

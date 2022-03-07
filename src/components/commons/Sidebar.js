@@ -14,6 +14,7 @@ import {
 import { XCircleIcon } from "@heroicons/react/outline";
 import { motion } from "framer-motion";
 import { ThemeContext } from "../../contextProvider/ThemeContextProvider";
+import { Router } from "react-router-dom";
 
 const spring = { type: "spring", stiffness: 700, damping: 30 };
 
@@ -87,7 +88,7 @@ function Sidebar({ onSidebarHide, showSidebar }) {
 }
 
 function MenuItem({ item: { id, title, notifications, icon: Icon, route }, onClick, selected }) {
-  // const onRouteClick = () => Router.push(route);
+  const onRouteClick = () => Router.push(route);
 
   return (
     <div
@@ -96,7 +97,8 @@ function MenuItem({ item: { id, title, notifications, icon: Icon, route }, onCli
         selected === id ? "text-[#777] dark:text-white border-r-[#777] dark:border-r-white" : "border-r-transparent"
       )}
       onClick={() => {
-        onClick(id);
+        // onClick(id);
+        onRouteClick();
       }}
     >
       <Icon className="w-5 h-5" />
