@@ -10,7 +10,6 @@ function FormRow({ children, addColumn, sectionId, rowId }) {
     //{ sections: [{ name, rows: [{ columns: [{}]  }] }] }
 
     addColumn((data) => {
-      console.log(data);
       return {
         ...data,
         struct: {

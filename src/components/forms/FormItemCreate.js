@@ -12,10 +12,11 @@ const variants = {
 const options = [
   { id: 1, name: "Text Field", value: "text" },
   { id: 2, name: "Number Field", value: "number" },
-  { id: 3, name: "Dropdown", value: "dropdown" },
-  { id: 4, name: "Checkbox", value: "checkbox" },
-  { id: 5, name: "Radio Buttons", value: "radio" },
-  { id: 6, name: "File Upload Field", value: "file" },
+  { id: 3, name: "Email Field", value: "email" },
+  { id: 4, name: "Dropdown", value: "dropdown" },
+  { id: 5, name: "Checkbox", value: "checkbox" },
+  { id: 6, name: "Radio Buttons", value: "radio" },
+  { id: 7, name: "File Upload Field", value: "file" },
 ];
 
 const defaultItem = { label: "", text: "", type: "text", isRequired: false };
@@ -31,7 +32,7 @@ function FormItemCreate({ show, item, onModalSubmit, handleClose }) {
     const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
-
+    // console.log(target);
     if (name === "text") {
       const label = value.replace(/ /g, "_").toLowerCase();
       setInput((input) => ({ ...input, ["label"]: label, [name]: value }));
@@ -88,10 +89,15 @@ function FormItemCreate({ show, item, onModalSubmit, handleClose }) {
     if (text === "") return MessageAndSend("Question is mandatory", false);
     if (label === "") return MessageAndSend("Label is mandatory", false);
 
-    if (type == "dropdown" || type == "checkbox" || type == "radio") {
+    if (type == "dropdown" || type == "radio") {
+      //type == "checkbox" ||
       if (typeof input.options != "undefined" && input.options.length !== 0) return MessageAndSend("", true);
       else return MessageAndSend("Options are mandatory", false);
     }
+    // if (type == "number") {
+    //   if (typeof input.minValue != "undefined" && input.minValue === "") return MessageAndSend("", true);
+    //   else return MessageAndSend("Minimum value is mandatory", false);
+    // }
 
     return MessageAndSend("", true);
   }
@@ -106,6 +112,8 @@ function FormItemCreate({ show, item, onModalSubmit, handleClose }) {
         return displayOptions();
       case "radio":
         return displayOptions();
+      case "number":
+        return displayNumberOptions();
       default:
         return displaySubtext();
     }
@@ -134,6 +142,28 @@ function FormItemCreate({ show, item, onModalSubmit, handleClose }) {
     );
   }
 
+  function displayNumberOptions() {
+    return (
+      <div className="md:flex md:items-center px-2 py-5 ">
+        <div className="md:w-1/3">
+          <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">
+            Min Value:
+          </label>
+        </div>
+        <div className="md:w-2/3">
+          <input
+            className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            id="inline-full-name"
+            type="text"
+            name="minValue"
+            value={input.minValue || 0}
+            onChange={onInputChange}
+            tabIndex="1"
+          />
+        </div>
+      </div>
+    );
+  }
   function displayOptions() {
     return (
       <div className="px-4 py-5">

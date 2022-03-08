@@ -2,7 +2,7 @@ import React from "react";
 import Modal from "./FormItemCreate";
 import { PlusIcon } from "@heroicons/react/outline";
 import CustomeInputField from "./CustomeInputField";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 function FormColumn({ item = {}, setData, sectionId, rowId, columnId }) {
   const isEmpty = Object.keys(item).length === 0;
@@ -11,24 +11,6 @@ function FormColumn({ item = {}, setData, sectionId, rowId, columnId }) {
   function onButtonClick() {
     onModal(true);
   }
-
-  // function onAddClick(e) {
-  //   e.preventDefault();
-  //   //{ sections: [{ name, rows: [{ columns: [{}]  }] }] }
-  //   addRow((data) => ({
-  //     ...data,
-  //     struct: {
-  //       sections: data.struct.sections.map((section, id) => {
-  //         if (id === sectionId)
-  //           return {
-  //             name: section.name,
-  //             rows: [...section.rows.map((row) => row), { columns: [{}] }],
-  //           };
-  //         else return section;
-  //       }),
-  //     },
-  //   }));
-  // }
 
   function onModalSubmit(item) {
     setData((data) => {

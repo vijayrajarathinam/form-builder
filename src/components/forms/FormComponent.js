@@ -7,7 +7,8 @@ function FormComponent({ form, setForm }) {
   const isEmpty = function (arr) {
     return Object.keys(arr || {}).length === 0;
   };
-
+  // console.log(form);
+  // return <div />;
   return (
     <React.Fragment>
       {!isEmpty(form) &&

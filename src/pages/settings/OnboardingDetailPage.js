@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { XIcon, DocumentTextIcon, PlusCircleIcon, DotsVerticalIcon } from "@heroicons/react/outline";
 import Breadcrumb from "../../components/commons/Breadcrumb";
 import FormComponent from "../../components/forms/FormComponent";
-import { getAllForms } from "../../redux/actions/formActions";
+import { getAllForms, modifyForm } from "../../redux/actions/formActions";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,7 +19,6 @@ function OnboardingDetailPage() {
 
   React.useEffect(() => {
     dispatch(getAllForms());
-
     if (error) {
       toast.error(error);
       // dispatch(clearErrors());
@@ -35,18 +34,21 @@ function OnboardingDetailPage() {
   };
 
   function addSection(name) {
-    // const struct = { sections: [{ name, rows: [{ columns: [{}]  }] }] };
-
-    // console.log({ ...form, struct: { ...form.struct, ...struct } });
     setForm((fom) => {
       if (isEmpty(fom.struct)) return { ...fom, struct: { sections: [{ name, rows: [{ columns: [{}] }] }] } };
       const form = fom;
       form.struct.sections.push({ name, rows: [{ columns: [{}] }] });
       return form;
     });
-    // console.log(form.struct);
   }
-  console.log(form);
+
+  function save(e) {
+    e.preventDefault();
+
+    dispatch(modifyForm(form, formId));
+    toast.success("submitted successfully.....");
+  }
+
   return (
     <motion.div initial={{ x: "300px", opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: "-300px", opacity: 0 }}>
       <Breadcrumb
@@ -69,7 +71,10 @@ function OnboardingDetailPage() {
           </button>
 
           <div className="h-10 md:h-15 relative flex h-15">
-            <button className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 pl-5 pr-2 text-sm rounded-l-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline">
+            <button
+              onClick={save}
+              className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 pl-5 pr-2 text-sm rounded-l-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
+            >
               <DocumentTextIcon className="w-4 h-4" />
               Save
             </button>

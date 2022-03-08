@@ -14,12 +14,12 @@ import Breadcrumb from "../../components/commons/Breadcrumb";
 import { Link } from "react-router-dom";
 
 const settings = [
-  { link: "#", name: "General", Icon: UserCircleIcon },
-  { link: "/settings/formbuilder", name: "Form Builder", Icon: ServerIcon },
-  { link: "#", name: "Appearance", Icon: EyeIcon },
-  { link: "#", name: "Privacy & Security", Icon: LockClosedIcon },
-  { link: "#", name: "Help and Support", Icon: SupportIcon },
-  { link: "#", name: "About", Icon: InformationCircleIcon },
+  { link: "#", name: "General", text: "Edit your profile details", Icon: UserCircleIcon },
+  { link: "/settings/formbuilder", text: "Build registration forms", name: "Form Builder", Icon: ServerIcon },
+  { link: "#", name: "Appearance", text: "Manage your visibility", Icon: EyeIcon },
+  { link: "#", name: "Privacy & Security", text: "You're in control of your data", Icon: LockClosedIcon },
+  { link: "#", name: "Help and Support", text: "Get additional support", Icon: SupportIcon },
+  { link: "#", name: "About", text: "Know more about Melonin", Icon: InformationCircleIcon },
 ];
 
 function SettingsPage() {
@@ -51,7 +51,7 @@ function SettingsPage() {
           className="h-full w-full outline-none"
         />
       </div>
-      <div class="mt-6 w-full bg-white rounded py-2 px-1 shadow-material">
+      <div class="block md:hidden mt-6 w-full bg-white rounded py-2 px-1 shadow-material">
         <ul class="divide-y-2 divide-gray-100">
           {getSettings().map(({ Icon, name, link }, i) => (
             <Link key={i} to={link} class="p-3 flex items-center cursor-pointer">
@@ -61,6 +61,27 @@ function SettingsPage() {
             </Link>
           ))}
         </ul>
+      </div>
+
+      <div className="hidden md:block container my-12 mx-auto px-4 md:px-12">
+        <div className="flex flex-wrap -mx-1 lg:-mx-4">
+          {getSettings().map(({ Icon, name, text, link }, i) => (
+            <Link
+              key={i}
+              to={link}
+              className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/4 text-gray-400 hover:text-blue-400 "
+            >
+              <article className="overflow-hidden my-1 rounded shadow-material hover:bg-gray-50">
+                <Icon className="p-1 h-[100px] w-full " />
+
+                <header className="flex flex-col items-center justify-between leading-tight p-2 md:p-4 ">
+                  <h1 className="text-xl">{name}</h1>
+                  <p className="text-sm ">{text}</p>
+                </header>
+              </article>
+            </Link>
+          ))}
+        </div>
       </div>
     </motion.div>
   );

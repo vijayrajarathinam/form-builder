@@ -13,7 +13,7 @@ function CustomeInputField({
 }) {
   let input = <div></div>;
 
-  if (type == "text" || type == "number" || type == "file") {
+  if (type == "text" || type == "email" || type == "number" || type == "file") {
     input = (
       <div className="flex w-full flex-col mb-2" onClick={onClick}>
         <label for={label} className="inline-flex mb-2 text-sm text-gray-800">
