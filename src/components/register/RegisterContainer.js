@@ -2,6 +2,32 @@ import React from "react";
 import middleware from "./components";
 
 function RegisterContainer({ data: { struct } }) {
+  const [data, setData] = React.useState({});
+
+  React.useEffect(() => {
+    if (Object.keys(struct).length != 0) {
+      let obj = {};
+
+      struct.sections.forEach((section) =>
+        section.rows.forEach((row) =>
+          row.columns.forEach((props) => {
+            obj[props.label] = "";
+          })
+        )
+      );
+      setData(obj);
+    }
+  }, []);
+
+  function onInputChange(e) {
+    e.preventDefault();
+    const target = e.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+
+    setData((data) => ({ ...data, [name]: value }));
+  }
+
   return (
     <div className="my-20 w-full max-w-50 mx-auto border border-gray-300 rounded-lg p-1 h-auto">
       <div className="flex flex-col bg-gray-100 items-center gap-y-5 text-gray-700 border border-gray-100 px-4 pt-4 pb-2">
@@ -14,7 +40,7 @@ function RegisterContainer({ data: { struct } }) {
           <h2 className="text-xl self-start capitalize">{section.name}</h2>
           {section.rows.map((row) => (
             <div className="flex flex-col md:flex-row items-center w-full text-gray-500">
-              {row.columns.map(middleware)}
+              {row.columns.map((props) => middleware({ ...props, ["onInputChange"]: onInputChange }))}
             </div>
           ))}
         </div>

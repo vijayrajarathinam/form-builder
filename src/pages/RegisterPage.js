@@ -83,10 +83,14 @@ const data = {
                 text: "state",
                 isRequired: false,
                 label: "state",
-                type: "text",
+                type: "dropdown",
+                options: [
+                  { id: 1, name: "yes", value: "yes" },
+                  { id: 1, name: "no", value: "no" },
+                ],
               },
               {
-                type: "number",
+                type: "file",
                 label: "pincode",
                 isRequired: false,
                 text: "Pincode",

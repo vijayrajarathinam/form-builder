@@ -17,9 +17,8 @@ function App() {
   return (
     <AnimatePresence exitBeforeEnter>
       <Routes>
-        {/* <Route exact path="/" element={<AuthRoute user={user} />}> */}
         <Route path="*" element={<NotFoundPage />} />
-
+        {/* <Route exact path="/" element={<AuthRoute user={user} />}> */}
         <Route exact path="/" element={<DashboardPage />} />
         <Route exact path="/settings" element={<Dashboard content={SettingsPage} />} />
         {/* </Route> */}
@@ -27,7 +26,6 @@ function App() {
         <Route path="/settings/formbuilder/:formId" element={<Dashboard content={OnboardingDetailPage} />} />
 
         <Route path="/register/:formId" element={<RegisterPage />} />
-        {/* <Route path="*" element={NotFoundPage} /> */}
         {/* <Route exact path="/login" element={<Login />} /> */}
       </Routes>
       <ToastContainer autoClose={3000} hideProgressBar />

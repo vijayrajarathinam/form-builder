@@ -1,9 +1,9 @@
 import React from "react";
 
-function RadioField({ label, text, isRequired, options = [] }) {
+function RadioField({ label, text, isRequired, options = [], onInputChange }) {
   return (
     <div class="flex flex-col w-full justify-center py-4 px-2">
-      <label for={label} className="inline-flex mb-2 text-sm text-gray-800">
+      <label for={label} className="inline-flex mb-2 text-sm text-gray-800 capitalize">
         {text}
         {isRequired && <span className="text-red-500 pl-1">*</span>}
       </label>
@@ -17,6 +17,7 @@ function RadioField({ label, text, isRequired, options = [] }) {
                 name={label}
                 id={label}
                 value={option.value}
+                onChange={onInputChange}
               />
               <label class="form-check-label inline-block text-gray-800" for={option.name}>
                 {option.value}
