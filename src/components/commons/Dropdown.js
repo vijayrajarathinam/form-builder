@@ -6,11 +6,11 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function DropDown({ options = [], select = {}, onChange = null }) {
+export default function DropDown({ options = [], select = {}, onChange = null, name = "" }) {
   const [selected, setSelected] = useState(select || options[0]);
 
   function onSelected(sel) {
-    onChange && onChange(sel);
+    onChange && onChange({ ...sel, name });
     setSelected(sel);
   }
 

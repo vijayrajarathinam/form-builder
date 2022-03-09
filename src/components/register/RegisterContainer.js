@@ -27,7 +27,9 @@ function RegisterContainer({ data: { struct } }) {
 
     setData((data) => ({ ...data, [name]: value }));
   }
-
+  function onDropdownChange({ value, name = "" }) {
+    setData((input) => ({ ...input, [name]: value }));
+  }
   return (
     <div className="my-20 w-full max-w-50 mx-auto border border-gray-300 rounded-lg p-1 h-auto">
       <div className="flex flex-col bg-gray-100 items-center gap-y-5 text-gray-700 border border-gray-100 px-4 pt-4 pb-2">
@@ -40,7 +42,12 @@ function RegisterContainer({ data: { struct } }) {
           <h2 className="text-xl self-start capitalize">{section.name}</h2>
           {section.rows.map((row) => (
             <div className="flex flex-col md:flex-row items-center w-full text-gray-500">
-              {row.columns.map((props) => middleware({ ...props, ["onInputChange"]: onInputChange }))}
+              {row.columns.map((props) =>
+                middleware({
+                  ...props,
+                  ["onInputChange"]: props.type === "dropdown" ? onDropdownChange : onInputChange,
+                })
+              )}
             </div>
           ))}
         </div>
