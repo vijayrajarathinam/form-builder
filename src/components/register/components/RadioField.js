@@ -1,6 +1,6 @@
 import React from "react";
 
-function RadioField({ label, text, isRequired, options = [], onInputChange }) {
+function RadioField({ label, text, isRequired, options = [], error, onInputChange }) {
   return (
     <div class="flex flex-col w-full justify-center py-4 px-2">
       <label for={label} className="inline-flex mb-2 text-sm text-gray-800 capitalize">
@@ -12,7 +12,13 @@ function RadioField({ label, text, isRequired, options = [], onInputChange }) {
           options.map((option, i) => (
             <div class="form-check form-check-inline ">
               <input
-                class="form-check-input form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                class={`form-check-input form-check-input appearance-none rounded-full h-4 w-4 border ${
+                  error[label] ? "border-red-500" : "border-gray-300"
+                } bg-white ${
+                  error[label]
+                    ? " checked:bg-red-600 checked:border-red-600"
+                    : " checked:bg-blue-600 checked:border-blue-600"
+                } focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer`}
                 type="radio"
                 name={label}
                 id={label}
@@ -25,6 +31,7 @@ function RadioField({ label, text, isRequired, options = [], onInputChange }) {
             </div>
           ))}
       </div>
+      {error[label] && <p className="text-red-500 text-xs italic mt-1 ml-1">{error[label]}</p>}
     </div>
   );
 }
