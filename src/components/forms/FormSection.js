@@ -40,7 +40,9 @@ function FormSection({ children, name = "Sections", sectionId, addRow }) {
       {(provided, snapshot) => {
         return (
           <div
-            className="flex relative flex-col items-center gap-y-3 text-gray-500 border border-gray-300 p-3"
+            className={`flex relative ${
+              snapshot.isDragging && "shadow-material bg-white"
+            } flex-col items-center gap-y-3 text-gray-500 border border-gray-300 my-4 p-3`}
             onMouseEnter={() => setToggle(true)}
             onMouseLeave={() => setToggle(false)}
             ref={provided.innerRef}
@@ -58,10 +60,7 @@ function FormSection({ children, name = "Sections", sectionId, addRow }) {
                 <PlusIcon className="h-4 w-4" />
                 <p className="text-xs">Add Row</p>
               </div>
-              <div
-                onClick={onAddClick}
-                className="flex gap-1 items-center border-r border-gray-400 pr-2 cursor-pointer"
-              >
+              <div className="flex gap-1 items-center border-r border-gray-400 pr-2 cursor-pointer">
                 <TrashIcon onClick={onDeleteClick} className="h-4 w-4 cursor-pointer" />
               </div>
               <button {...provided.dragHandleProps}>

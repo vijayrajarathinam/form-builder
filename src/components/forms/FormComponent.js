@@ -9,8 +9,30 @@ function FormComponent({ form, setForm }) {
     return Object.keys(arr || {}).length === 0;
   };
 
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  };
+
+  const onSectionDropEnd = ({ ...props }) => {
+    if (!props.destination) return;
+
+    const startIndex = props.source.index;
+    const endIndex = props.destination.index;
+    const arr = form.sections;
+    setForm((data) => ({
+      ...data,
+      struct: {
+        sections: reorder(arr, startIndex, endIndex),
+      },
+    }));
+  };
+
   return (
-    <DragDropContext onDragEnd={console.log}>
+    <DragDropContext onDragEnd={onSectionDropEnd}>
       {!isEmpty(form) && (
         <Droppable droppableId="droppable-section">
           {(provided, snapshot) => {
@@ -35,6 +57,7 @@ function FormComponent({ form, setForm }) {
                       ))}
                   </FormSection>
                 ))}
+                {provided.placeholder}
               </div>
             );
           }}
