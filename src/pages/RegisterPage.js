@@ -43,6 +43,7 @@ const data = {
                 isRequired: false,
                 type: "email",
                 label: "email",
+                useAsUsername: true,
               },
               {
                 type: "text",

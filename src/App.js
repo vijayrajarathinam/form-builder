@@ -12,6 +12,7 @@ import RegisterPage from "./pages/RegisterPage";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import NotFoundPage from "./pages/NotFoundPage";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
         <Route path="/settings/formbuilder/:formId" element={<Dashboard content={OnboardingDetailPage} />} />
 
         <Route path="/register/:formId" element={<RegisterPage />} />
-        {/* <Route exact path="/login" element={<Login />} /> */}
+        <Route exact path="/login" element={<LoginPage />} />
       </Routes>
       <ToastContainer autoClose={3000} hideProgressBar />
     </AnimatePresence>
