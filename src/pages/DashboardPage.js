@@ -15,7 +15,7 @@ import { XCircleIcon } from "@heroicons/react/outline";
 import { motion } from "framer-motion";
 import Header from "../components/commons/Header";
 import { ThemeContext } from "../contextProvider/ThemeContextProvider";
-
+import Image from "../components/commons/Image";
 import "./Dashboard.css";
 
 const spring = {

@@ -6,65 +6,66 @@ import { motion, AnimatePresence } from "framer-motion";
 // import { auth, db } from "../../firebase";
 import Image from "./Image";
 
-const variants = {
-  start: { y: 100, x: "-50%", transition: { duration: 0.5 } },
-  stop: { y: -100, x: "-50%", transition: { repeatDelay: 3 } },
-};
-
 const Modal = ({ handleClose, show, username }) => {
-  const modal = "fixed top-0 left-0 w-full h-full bg-black/[0.6]";
-
-  // const redirect = (e, path) => {
-  //   e.preventDefault();
-  //   // Router.push(path);
-  // };
+  const variants = {
+    start: { y: -30, transition: { duration: 0.5 } },
+    stop: { y: 0, transition: { repeatDelay: 3 } },
+  };
 
   return (
     <AnimatePresence>
-      <div className={modal + ` ${show ? "block" : "hidden"}`} style={{ zIndex: 1 }}>
-        <motion.section variants={variants} animate={show ? "start" : "stop"} className="profile-modal">
-          <div className="flex items-center justify-between ">
-            <p className="text-xl">Account</p>
-            <button onClick={handleClose}>
-              <XIcon className="w-6 h-6 text-gray-600" />
-            </button>
-          </div>
-          <div className="flex items-center gap-5 my-5 ">
-            <div className="h-15 w-15 border-pink-500 border-4 rounded-full">
-              <Image
-                className="rounded-full bg-black cursor-pointer hover:opacity-75"
-                src={`https://avatars.dicebear.com/api/pixel-art/${username}.svg`}
-                layout="fill"
-              />
-            </div>
+      <motion.div
+        variants={variants}
+        animate={show ? "stop" : "start"}
+        className={` ${
+          show ? "flex" : "hidden"
+        } absolute p-2.5 bg-gray-50 flex-col items-center -right-[1rem] top-[3.5rem] mt-1 z-10 w-[280px] min-h-[80px] overflow-y-scroll text-base list-none rounded divide-y divide-gray-100 shadow dark:bg-gray-700`}
+        style={{ border: "1px solid #ccc" }}
+        onMouseEnter={(e) => {
+          e.preventDefault();
+          handleClose(true);
+        }}
+        onMouseLeave={(e) => {
+          e.preventDefault();
+          handleClose(false);
+        }}
+      >
+        <p className="text-[#202124] tracking-tighter m-0 overflow-hidden inline-block text-ellipsis font-bold text-lg">
+          Username
+        </p>
 
-            <div className="font-bold text-xl text-emerald-500">{username}</div>
-          </div>
-          {/* <div className="flex flex-col px-5 py-3 my-2 gap-2.5 text-gray-600">
-            <p className="flex gap-2.5 cursor-pointer" onClick={(e) => redirect(e, "/mycourse/learning")}>
-              <BookOpenIcon className="w-6 h-6" /> My Courses
-            </p>
-            <p className="flex gap-2.5 cursor-pointer" onClick={(e) => redirect(e, "/profile")}>
-              <UserCircleIcon className="w-6 h-6" /> View Profile
-            </p>
-          </div> */}
-          <button
-            onClick={() => {
-              //   signOut(auth);
-            }}
-            className="bg-blue-600 rounded-md py-2 w-full font-bold text-white"
+        <p className="leading-tight mb-3 tracking-tight text-ellipsis overflow-hidden text-[#5f6368] font-normal text-[.875rem]">
+          email@mail.com
+        </p>
+
+        <button
+          class="text-gray-500 mt-1 bg-transparent border border-solid border-gray-500 hover:bg-gray-500 hover:text-white active:bg-gray-600 font-bold uppercase px-8 py-2 rounded-xl outline-none focus:outline-none  ease-linear transition-all duration-150"
+          type="button"
+        >
+          Logout
+        </button>
+        <div class="mt-3 flex items-center justify-evenly gap-x-2">
+          <a
+            href="#"
+            className="leading-tight tracking-tight text-ellipsis overflow-hidden text-[#5f6368] font-normal text-[.875rem]"
           >
-            Logout
-          </button>
-        </motion.section>
-      </div>
+            Privacy Policy
+          </a>
+          <span class="seperator">•</span>
+          <a
+            href="#"
+            className="leading-tight tracking-tight text-ellipsis overflow-hidden text-[#5f6368] font-normal text-[.875rem]"
+          >
+            Terms of Service
+          </a>
+        </div>
+      </motion.div>
     </AnimatePresence>
   );
 };
 
 function Header({ IconButton, onSidebarHide }) {
   const [show, onModal] = useState(false);
-  // const [users, setUsers] = useState({ name: "" });
   const users = {};
   //   const [user, setUser] = useState({});
 
@@ -105,18 +106,16 @@ function Header({ IconButton, onSidebarHide }) {
             onModal((s) => !s);
           }}
         >
-          <div className="font-bold text-emerald-500">{users?.name?.substring(0, 9) || "user.."}</div>
-
           <div className="relative h-15 w-15 lg:mx-auto border-pink-500 border-4 rounded-full">
             <Image
               className="rounded-full bg-black cursor-pointer hover:opacity-75"
               src={`https://avatars.dicebear.com/api/pixel-art/${users?.name || "user"}.svg`}
               layout="fill"
             />
+            <Modal show={show} handleClose={() => onModal} username={users?.name || "user"} />
           </div>
         </div>
       </div>
-      <Modal show={show} handleClose={() => onModal((s) => !s)} username={users?.name || "user"} />
     </div>
   );
 }

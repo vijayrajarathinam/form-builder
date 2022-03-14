@@ -155,7 +155,7 @@ function LoginPage() {
             </Link>
           </div>
         </form>
-        <p className="text-center text-gray-500 text-xs">&copy;2020 Acme Corp. All rights reserved.</p>
+        <p className="text-center text-gray-500 text-xs">&copy;2022 Melon Corp. All rights reserved.</p>
       </div>
     </div>
   );

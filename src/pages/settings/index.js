@@ -34,7 +34,7 @@ function SettingsPage() {
     <motion.div initial={{ x: "300px", opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: "-300px", opacity: 0 }}>
       <Breadcrumb
         crumbs={[
-          { link: "/dashboard", text: "dashboard" },
+          { link: "/", text: "dashboard" },
           { link: "/settings", text: "settings" },
         ]}
       />
