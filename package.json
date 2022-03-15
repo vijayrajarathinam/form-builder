@@ -25,6 +25,7 @@
     "react-toastify": "^8.2.0",
     "redux": "^4.1.2",
     "redux-form": "^8.3.8",
+    "redux-form-website-template": "^1.0.21",
     "redux-immutable-state-invariant": "^2.1.0",
     "redux-thunk": "^2.4.1",
     "tailwind-scrollbar-hide": "^1.1.7",

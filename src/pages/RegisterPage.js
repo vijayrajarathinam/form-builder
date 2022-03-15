@@ -81,9 +81,9 @@ const data = {
           {
             columns: [
               {
-                text: "state",
+                text: "state name",
                 isRequired: false,
-                label: "state",
+                label: "state_name",
                 type: "dropdown",
                 options: [
                   { id: 1, name: "yes", value: "yes" },
