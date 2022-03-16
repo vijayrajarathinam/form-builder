@@ -40,7 +40,7 @@ const data = {
             columns: [
               {
                 text: "email",
-                isRequired: false,
+                isRequired: true,
                 type: "email",
                 label: "email",
                 useAsUsername: true,

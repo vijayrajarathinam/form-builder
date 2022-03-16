@@ -4,7 +4,7 @@ import { PlusIcon } from "@heroicons/react/outline";
 import CustomeInputField from "./CustomeInputField";
 import { motion } from "framer-motion";
 
-function FormColumn({ item = {}, setData, sectionId, rowId, columnId }) {
+function FormColumn({ item = {}, questions, setData, sectionId, rowId, columnId }) {
   const isEmpty = Object.keys(item).length === 0;
   const [show, onModal] = React.useState(false);
 
@@ -50,7 +50,13 @@ function FormColumn({ item = {}, setData, sectionId, rowId, columnId }) {
       ) : (
         <CustomeInputField {...item} onClick={onButtonClick} />
       )}
-      <Modal show={show} item={item} handleClose={() => onModal(false)} onModalSubmit={onModalSubmit} />
+      <Modal
+        show={show}
+        questions={questions}
+        item={item}
+        handleClose={() => onModal(false)}
+        onModalSubmit={onModalSubmit}
+      />
     </motion.div>
   );
 }

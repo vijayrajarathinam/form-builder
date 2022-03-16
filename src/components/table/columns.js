@@ -26,7 +26,7 @@ export default () => [
     accessor: "status",
     Cell: ({ cell: { value } }) => {
       if (value === "active")
-        return <span className="text-xs text-green-600 bg-green-100 uppercase rounded-md px-2 py-1">{value}</span>;
+        return <span className="text-xs text-emerald-600 bg-green-100 uppercase rounded-md px-2 py-1">{value}</span>;
       if (value === "draft")
         return <span className="text-xs text-yellow-600 bg-yellow-100 uppercase rounded-md px-2 py-1">{value}</span>;
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { XIcon, DocumentTextIcon, PlusCircleIcon, DotsVerticalIcon } from "@heroicons/react/outline";
@@ -9,15 +9,16 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 function OnboardingDetailPage() {
-  const [toggle, toggleDropdown] = React.useState(false);
-  const [form, setForm] = React.useState({ name: "Form Heading", struct: {} });
+  const [toggle, toggleDropdown] = useState(false);
+  const [form, setForm] = useState({ name: "Form Heading", struct: {} });
+  // const [questions, setQuestions] = useState([]);
   const { error, data, loading } = useSelector((state) => state.forms);
-  const [modal, showModal] = React.useState(false);
+  const [modal, showModal] = useState(false);
   const handleClose = () => showModal(false);
   const { formId } = useParams();
   const dispatch = useDispatch();
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(getAllForms());
     if (error) {
       toast.error(error);
@@ -25,7 +26,16 @@ function OnboardingDetailPage() {
     }
   }, []);
 
-  React.useEffect(() => {
+  const questions = useMemo(() => {
+    const arr = [];
+    if (!form.struct.sections) return arr;
+    form.struct.sections.forEach((section) =>
+      section.rows.forEach((row) => row.columns.forEach((props) => arr.push(props)))
+    );
+    return arr;
+  }, [form?.struct]);
+
+  useEffect(() => {
     if (data && loading === false) setForm(data.find((d) => d.id === formId));
   }, [data, loading]);
 
@@ -129,7 +139,7 @@ function OnboardingDetailPage() {
           <p className="self-start text-sm">Please fill all the required fields</p>
         </div>
 
-        <FormComponent form={form.struct} setForm={setForm} />
+        <FormComponent questions={questions} form={form.struct} setForm={setForm} />
         <CreateSectionModal show={modal} handleClose={handleClose} addSection={addSection} />
       </div>
     </motion.div>

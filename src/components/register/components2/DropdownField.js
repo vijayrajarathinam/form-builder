@@ -15,7 +15,6 @@ import { Field } from "redux-form";
 </div> */
 }
 function DropdownField({ label, text, meta: { touched, error }, isRequired, subText = null, options = [] }) {
-  console.log(label);
   return (
     <div className="flex w-full flex-col py-4 px-2">
       <label forHtml={label} className="inline-flex mb-2 text-sm text-gray-800 capitalize">

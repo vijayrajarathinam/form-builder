@@ -4,7 +4,7 @@ import FormSection from "./FormSection";
 import FormColumn from "./FormColumn";
 import FormRow from "./FormRow";
 
-function FormComponent({ form, setForm }) {
+function FormComponent({ form, setForm, questions }) {
   const isEmpty = function (arr) {
     return Object.keys(arr || {}).length === 0;
   };
@@ -45,6 +45,7 @@ function FormComponent({ form, setForm }) {
                         <FormRow key={rid} sectionId={sid} rowId={rid} addColumn={setForm}>
                           {row.columns.map((column, cid) => (
                             <FormColumn
+                              questions={questions}
                               item={column}
                               sectionId={sid}
                               rowId={rid}

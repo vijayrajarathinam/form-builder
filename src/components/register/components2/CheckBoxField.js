@@ -1,7 +1,8 @@
 import React from "react";
 import { Field } from "redux-form";
 
-const renderError = ({ meta: { touched, error } }) => (touched && error ? <span>{error}</span> : false);
+const renderError = ({ meta: { touched, error } }) =>
+  touched && error ? <p className="text-red-500 text-xs italic mt-1 ml-1">{error}</p> : false;
 
 function CheckBoxField({ text, label, isRequired }) {
   return (

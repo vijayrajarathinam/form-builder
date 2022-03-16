@@ -2,7 +2,8 @@ import React from "react";
 import { XIcon } from "@heroicons/react/solid";
 import { motion, AnimatePresence } from "framer-motion";
 import DropDown from "../commons/Dropdown";
-import { PlusCircleIcon, PresentationChartLineIcon, TrashIcon } from "@heroicons/react/outline";
+import { SaveIcon, SaveAsIcon, TrashIcon } from "@heroicons/react/outline";
+import LogicTable from "./LogicTable";
 
 const variants = {
   start: { y: 100, x: "-50%", transition: { duration: 0.5 } },
@@ -19,9 +20,21 @@ const options = [
   { id: 7, name: "File Upload Field", value: "file" },
 ];
 
-const defaultItem = { label: "", text: "", type: "text", isRequired: false };
+const logicOptions = [
+  { id: 1, name: "none", value: "none" },
+  { id: 2, name: "show", value: "show" },
+  { id: 3, name: "hide", value: "hide" },
+];
 
-function FormItemCreate({ show, item, onModalSubmit, handleClose }) {
+const defaultItem = {
+  label: "",
+  text: "",
+  type: "text",
+  logic: { default: "none", and: [], or: [] },
+  isRequired: false,
+};
+
+function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
   const isEmpty = Object.keys(item).length === 0;
   const modal = "fixed top-0 left-0 w-full h-full bg-black/[0.6]";
   const [input, setInput] = React.useState(isEmpty ? defaultItem : item);
@@ -65,6 +78,20 @@ function FormItemCreate({ show, item, onModalSubmit, handleClose }) {
     setInput((input) => ({ ...input, ["type"]: value }));
   }
 
+  function setDefaultLogic({ value }) {
+    setInput((input) => ({ ...input, ["logic"]: { ...input.logic, ["default"]: value } }));
+  }
+
+  function addRow(e, title) {
+    e.preventDefault();
+    const object = { field: questions[0], value: questions[0].value };
+    // console.log(object);
+    setInput((input) => ({
+      ...input,
+      ["logic"]: { ...input.logic, [title]: [...input.logic[title.toLowerCase()], object] },
+    }));
+  }
+
   function onOptionChange(index) {
     return (e) => {
       const { name, value } = e.target;
@@ -103,6 +130,7 @@ function FormItemCreate({ show, item, onModalSubmit, handleClose }) {
   }
 
   const preModalSubmit = () => validate() && onModalSubmit(input);
+  const preModalSubmitAndContinue = () => validate();
 
   const renderSwitch = () => {
     switch (input.type) {
@@ -297,7 +325,25 @@ function FormItemCreate({ show, item, onModalSubmit, handleClose }) {
                   <summary className="bg-gray-200 text-gray-500 font-bold py-3 px-4 cursor-pointer select-none w-full">
                     Logic
                   </summary>
-                  <p className="pt-1 pb-3 px-4">Of course. It's yours to use wherever and whenever you like.</p>
+                  <div className="p-2">
+                    <div className="md:flex w-1/2 pl-3 md:items-center ">
+                      <div className="md:w-2/3">
+                        <label
+                          className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
+                          for="input-type"
+                        >
+                          Default Visibility
+                        </label>
+                      </div>
+                      <div className="md:w-2/3">
+                        <DropDown options={logicOptions} select={logicOptions[0]} onChange={setDefaultLogic} />
+                      </div>
+                    </div>
+                    {/* table and */}
+                    <LogicTable title="and" addRow={addRow} rows={input.logic.and} questions={questions} />
+                    {/* table or */}
+                    <LogicTable title="or" addRow={addRow} rows={input.logic.or} questions={questions} />
+                  </div>
                 </details>
               </div>
               {/* accordion ends*/}
@@ -306,17 +352,20 @@ function FormItemCreate({ show, item, onModalSubmit, handleClose }) {
           <div className="flex mt-5 gap-x-2">
             <button
               onClick={preModalSubmit}
-              className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
+              className="inline-flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
             >
-              <PlusCircleIcon className="w-4 h-4" />
-              Add
+              <SaveIcon className="w-4 h-4" />
+              Save
             </button>
 
-            <button className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline">
-              <PresentationChartLineIcon className="w-4 h-4" />
-              Cancel
+            <button
+              onClick={preModalSubmitAndContinue}
+              className="inline-flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
+            >
+              <SaveAsIcon className="w-4 h-4" />
+              Save And Continue
             </button>
-            <button className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline">
+            <button className="inline-flex items-center bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline">
               <TrashIcon className="w-4 h-4" />
               Remove
             </button>
