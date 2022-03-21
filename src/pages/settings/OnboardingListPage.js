@@ -1,8 +1,8 @@
-import React from "react";
-import { useTable } from "react-table";
-import { toast } from "react-toastify";
+import React, { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useTable } from "react-table";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 import { PlusCircleIcon } from "@heroicons/react/outline";
 import { getAllForms } from "../../redux/actions/formActions";
 import Table, { columnArray } from "../../components/table";
@@ -10,14 +10,14 @@ import Breadcrumb from "../../components/commons/Breadcrumb";
 import CreateFormModal from "./CreateFormModal";
 
 function OnboardingForms() {
-  const columns = React.useMemo(columnArray, []);
+  const columns = useMemo(columnArray, []);
   const { error, data, loading } = useSelector((state) => state.forms);
   const tableProps = useTable({ columns, loading, data });
-  const [modal, showModal] = React.useState(false);
+  const [modal, showModal] = useState(false);
   const handleClose = () => showModal(false);
   const dispatch = useDispatch();
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(getAllForms());
     if (error) {
       toast.error(error);

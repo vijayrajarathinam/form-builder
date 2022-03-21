@@ -85,7 +85,7 @@ function LoginPage() {
 
   return (
     <div className="relative h-screen bg-gray-100">
-      <div className="max-w-sm w-full shadow-sm  bg-white  absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-gray-300 rounded-lg p-4 h-auto">
+      <div className="max-w-sm w-full shadow-sm  bg-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-gray-300 rounded-lg p-4 h-auto">
         <div
           className="w-20 h-20 absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-0.5 rounded-xl shadow-sm bg-white"
           style={{ border: "1px solid #efefef" }}
@@ -98,15 +98,15 @@ function LoginPage() {
         <form className="bg-white pt-6 pb-8 mb-4">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" for="username">
-              Username
+              Email
             </label>
             <input
               className={`shadow appearance-none border ${
-                error.username.error ? "border-red-500" : ""
-              } rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline`}
+                error.username.error ? "border-red-500" : "border-gray-400"
+              } rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight shadow-none focus:outline-none focus:shadow-outline`}
               id="username"
               type="text"
-              placeholder="Username"
+              placeholder="example@mail.com"
               value={user.username}
               name="username"
               onChange={onInputChange}
@@ -120,8 +120,8 @@ function LoginPage() {
             </label>
             <input
               className={`shadow appearance-none border ${
-                error.password.error ? "border-red-500" : ""
-              } rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline`}
+                error.password.error ? "border-red-500" : "border-gray-400"
+              } rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight shadow-none focus:outline-none focus:shadow-outline`}
               id="password"
               type="password"
               placeholder="******************"

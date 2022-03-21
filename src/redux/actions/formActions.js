@@ -28,7 +28,9 @@ export function addNewForm(formData = {}) {
   return function (dispatch) {
     dispatch({ type: ADD_FORM_REQUEST });
     return addForm(formData)
-      .then((form) => dispatch({ type: ADD_FORM_SUCCESS, payload: { ...formData, id: form.id } }))
+      .then((form) => {
+        dispatch({ type: ADD_FORM_SUCCESS, payload: { ...formData, wizard: false, new: true, id: form.id } });
+      })
       .catch((err) => {
         dispatch({ type: ADD_FORM_FAILURE, payload: err.message });
         throw err;
@@ -37,16 +39,9 @@ export function addNewForm(formData = {}) {
 }
 
 export function modifyForm(formData = {}, id = null) {
-  console.log(formData);
   return function (dispatch) {
-    // dispatch({ type: UPDATE_FORM_REQUEST });
-    console.log(formData);
     return updateForm(formData, id)
-      .then((form) => {
-        getAllForms()(dispatch);
-        // console.log(form, formData);
-        // dispatch({ type: UPDATE_FORM_SUCCESS, payload: { ...formData, id } });
-      })
+      .then(() => getAllForms()(dispatch))
       .catch((err) => {
         dispatch({ type: UPDATE_FORM_FAILURE, payload: err.message });
         throw err;

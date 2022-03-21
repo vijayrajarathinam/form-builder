@@ -1,32 +1,7 @@
 import React from "react";
 import { Field, reduxForm } from "redux-form";
 import validate from "./validate";
-import renderField from "./renderField";
 import middleware from "../components2";
-
-// {
-//     "input": {
-//       "name": "firstName",
-//       "value": ""
-//     },
-//     "meta": {
-//       "active": false,
-//       "asyncValidating": false,
-//       "autofilled": false,
-//       "dirty": false,
-//       "error": "Required",
-//       "form": "wizard",
-//       "invalid": true,
-//       "pristine": true,
-//       "submitting": false,
-//       "submitFailed": false,
-//       "touched": false,
-//       "valid": false,
-//       "visited": false
-//     },
-//     "type": "text",
-//     "label": "First Name"
-//   }
 
 const WizardFormFirstPage = ({ ...props }) => {
   const { handleSubmit, page, inputs, nextPage, previousPage, pristine, submitting } = props;
@@ -49,11 +24,11 @@ const WizardFormFirstPage = ({ ...props }) => {
                       name={props.label}
                       type={props.type}
                       text={props.text}
-                      // {...props}
+                      label={props.text}
+                      {...props}
                       component={({ ...props }) => {
                         return middleware(props);
                       }}
-                      label={props.text}
                     />
                   ))}
                 </div>
@@ -82,7 +57,7 @@ const WizardFormFirstPage = ({ ...props }) => {
 };
 
 export default reduxForm({
-  form: "wizard", //                 <------ same form name
+  form: "wizard",
   destroyOnUnmount: false, //        <------ preserve form data
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
   validate,

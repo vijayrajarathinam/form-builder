@@ -19,24 +19,21 @@ export default function formReducer(state = initialState.forms, action) {
   if (action.type === ALL_FORMS_FAILURE) return { loading: false, error: action.payload, data: [] };
 
   if (action.type === ADD_FORM_REQUEST) return { loading: true, data: [...state.data], error: {} };
-  if (action.type === ADD_FORM_SUCCESS) return { loading: false, data: [...state.data, action.payload], error: {} };
+  if (action.type === ADD_FORM_SUCCESS) return { loading: false, data: [action.payload, ...state.data], error: {} };
   if (action.type === ADD_FORM_FAILURE) return { loading: false, error: action.payload, data: [] };
 
   if (action.type === UPDATE_FORM_REQUEST) return state;
   // return { loading: true, data: [...state.data], error: {} };
-  if (action.type === UPDATE_FORM_SUCCESS) {
-    console.log(state);
+  if (action.type === UPDATE_FORM_SUCCESS)
     return {
       loading: false,
       data: produce(state.data, (draft) => {
-        console.log(draft);
         draft[action.payload.id] = action.payload;
       }),
       error: {},
     };
-  }
-  if (action.type === UPDATE_FORM_FAILURE) return { loading: false, error: action.payload, data: [] };
 
+  if (action.type === UPDATE_FORM_FAILURE) return { loading: false, error: action.payload, data: [] };
   if (action.type === CLEAR_ERRORS) return { ...state, error: null };
 
   return state;

@@ -13,6 +13,11 @@ import { reducer as reduxFormReducer } from "redux-form";
 const rootReducer = combineReducers({
   forms,
   form: reduxFormReducer,
+  // .plugin({
+  //   form:(state, action) =>{
+
+  //   }
+  // }),
 });
 
 export default rootReducer;

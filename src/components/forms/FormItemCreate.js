@@ -45,7 +45,7 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
     const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
-    // console.log(target);
+
     if (name === "text") {
       const label = value.replace(/ /g, "_").toLowerCase();
       setInput((input) => ({ ...input, ["label"]: label, [name]: value }));
@@ -85,10 +85,51 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
   function addRow(e, title) {
     e.preventDefault();
     const object = { field: questions[0], value: questions[0].value };
-    // console.log(object);
+
     setInput((input) => ({
       ...input,
       ["logic"]: { ...input.logic, [title]: [...input.logic[title.toLowerCase()], object] },
+    }));
+  }
+
+  function onLogicOptionChange(e, title, rowId) {
+    e.preventDefault();
+    const target = e.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+
+    setInput((input) => ({
+      ...input,
+      ["logic"]: {
+        ...input.logic,
+        [title]: input.logic[title].map((_, rId) => {
+          return rowId == rId ? { ..._, ["field"]: questions.find((question) => question.label === value) } : _;
+        }),
+      },
+    }));
+  }
+  function onValueChange(e, title, rowId) {
+    const target = e.target;
+    const value = target.value;
+    console.log(value);
+    setInput((input) => ({
+      ...input,
+      ["logic"]: {
+        ...input.logic,
+        [title]: input.logic[title].map((_, rId) => {
+          return rowId == rId ? { ..._, ["value"]: value } : _;
+        }),
+      },
+    }));
+  }
+  function deleteRow(title, rowId) {
+    setInput((input) => ({
+      ...input,
+      ["logic"]: {
+        ...input.logic,
+        [title]: input.logic[title].filter((_, rId) => {
+          return rowId == rId ? false : true;
+        }),
+      },
     }));
   }
 
@@ -340,9 +381,25 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
                       </div>
                     </div>
                     {/* table and */}
-                    <LogicTable title="and" addRow={addRow} rows={input.logic.and} questions={questions} />
+                    <LogicTable
+                      title="and"
+                      addRow={addRow}
+                      deleteRow={deleteRow}
+                      onLogicOptionChange={onLogicOptionChange}
+                      rows={input.logic.and}
+                      questions={questions}
+                      onValueChange={onValueChange}
+                    />
                     {/* table or */}
-                    <LogicTable title="or" addRow={addRow} rows={input.logic.or} questions={questions} />
+                    <LogicTable
+                      title="or"
+                      addRow={addRow}
+                      deleteRow={deleteRow}
+                      onLogicOptionChange={onLogicOptionChange}
+                      rows={input.logic.or}
+                      questions={questions}
+                      onValueChange={onValueChange}
+                    />
                   </div>
                 </details>
               </div>

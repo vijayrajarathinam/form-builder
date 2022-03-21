@@ -20,6 +20,18 @@ export default () => [
   {
     Header: " Name",
     accessor: "name",
+    Cell: ({ cell: { value, row } }) => {
+      return (
+        <div className="flex gap-2 items-center">
+          {value}
+          {row.original.new ? (
+            <span className="rounded text-xs font-bold px-1 py-0.25 bg-cyan-500 text-white">New</span>
+          ) : (
+            ""
+          )}
+        </div>
+      );
+    },
   },
   {
     Header: "Status",

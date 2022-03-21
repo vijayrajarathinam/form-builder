@@ -1,52 +1,102 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Field, reduxForm } from "redux-form";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/solid";
 import validate from "./validate";
 import middleware from "../components2";
+import { SubmissionError } from "redux-form";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { register } from "../../../api/userApi";
+import { auth } from "../../../firebase";
 
-// function validate(value) {
-//   console.log(value);
-// let err = {};
-// const re =
-//   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-
-// for (let i = 0; i < inputs.length; i++) {
-//   const input = inputs[i];
-//   const value = data[input.label];
-
-//   if (input.type == "email")
-//     if (!value.toLowerCase().match(re)) err[input.label] = "Not a valid email";
-//     else if (input.useAsUsername) setUsername(value);
-
-//   if (input.type == "number" && input.isRequired && input.minValue <= value.length)
-//     err[input.label] = `Value must be greater than ${input.minValue}`;
-//   if (input.isRequired && value == "") err[input.label] = "This Field cannot be empty";
-// }
-// console.log(err);
-// setError(err);
-// }
-
-// export default reduxForm({
-// form: "wizard",
-// destroyOnUnmount: false,
-// forceUnregisterOnUnmount: true,
-// validate, //: ({ ...props }) => console.log(props),
-// })(f
 export default function WizardForm({ ...props }) {
   const { inputs } = props;
+  const [status, setStatus] = useState("loading");
+
+  useEffect(() => {
+    status != inputs.formStatus && setStatus(inputs.formStatus);
+  }, [inputs.formStatus]);
+
   const [page, setPage] = useState(1);
 
   const nextPage = () => setPage((page) => page + 1);
-  return (
-    <>
-      {inputs.struct.sections.map((section, i) => {
-        if (page == i + 1)
-          return (
-            <Form {...props} page={page} onSubmit={nextPage} setPage={setPage} section={section} inputs={inputs} />
-          );
-      })}
-    </>
-  );
+
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const createRecord = (values) => {
+    return sleep(1000).then(() => {
+      if (!values.email)
+        throw new SubmissionError({ email: "This Field cannot be empty", _error: "This Field cannot be empty" });
+      else {
+        setStatus("loading");
+        const password = "Admin@12345";
+        const username = values.email;
+        createUserWithEmailAndPassword(auth, username, password)
+          .then(async ({ user }) => {
+            register(values, user.uid)
+              .then(() => setStatus("success"))
+              .catch(() => setStatus("failure"));
+          })
+          .catch(() => setStatus("failure"));
+      }
+    });
+  };
+  if (status == "loading")
+    return (
+      <div className="relative w-full h-screen">
+        <div className="absolute top-[50%] left-[50%] flex flex-col items-center transform -translate-x-[50%] -translate-y-[50%]">
+          <div className="w-[100px] h-[100px] mx-0 my-[10px] px-[20px] pt-[20px] rounded text-center">
+            <div className="load-3">
+              <div className="line mx-0.5 inline-block w-[15px] h-[25px] rounded bg-[#4b9cdb]"></div>
+              <div className="line mx-0.5 inline-block w-[15px] h-[25px] rounded bg-[#4b9cdb]"></div>
+              <div className="line mx-0.5 inline-block w-[15px] h-[25px] rounded bg-[#4b9cdb]"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  else if (status == "progress")
+    return (
+      <>
+        {inputs.struct.sections.map((section, i) => {
+          if (page == i + 1)
+            return (
+              <Form
+                {...props}
+                createRecord={createRecord}
+                page={page}
+                onSubmit={nextPage}
+                setPage={setPage}
+                section={section}
+                inputs={inputs}
+              />
+            );
+        })}
+      </>
+    );
+  else if (status == "success")
+    return (
+      <div className="relative w-full h-[50vh]">
+        <div className="absolute top-[50%] left-[50%] flex flex-col items-center transform -translate-x-[50%] -translate-y-[50%]">
+          <CheckCircleIcon className="w-30 md:w-1/3 h-30 md:h-1/3 text-green-700" />
+          <p className="text-center w-full md:w-2/3 leading-tighter tracking-tighter font-bold text-xl text-gray-700">
+            We have received your registration, Admin will be in touch with you shortly!
+          </p>
+        </div>
+      </div>
+    );
+  else if (status == "failure")
+    return (
+      <div className="relative w-full h-[50vh]">
+        <div className="absolute top-[50%] left-[50%] flex flex-col items-center transform -translate-x-[50%] -translate-y-[50%]">
+          <XCircleIcon className="w-30 md:w-1/3 h-30 md:h-1/3 text-red-700" />
+          <p className="text-center w-full md:w-2/3 leading-tighter tracking-tighter font-bold text-xl text-gray-700">
+            Somthing wrong contact support@melonin.com
+          </p>
+        </div>
+      </div>
+    );
 }
+
 // );
 
 const Form = reduxForm({
@@ -57,11 +107,12 @@ const Form = reduxForm({
 })(function ({ ...props }) {
   const previousPage = () => setPage((page) => (page > 1 ? page - 1 : page));
 
-  const { handleSubmit, inputs, section, pristine, submitting, page, setPage } = props;
+  const { handleSubmit, createRecord, inputs, section, pristine, submitting, page, setPage } = props;
+
   return (
     <form
       // onSubmit={inputs.struct.sections.length == page ? handleSubmit : nextPage}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(createRecord)}
       className="flex relative flex-col items-center gap-y-1 text-gray-500 p-3"
     >
       <h2 className="text-xl self-start capitalize">{section.name}</h2>

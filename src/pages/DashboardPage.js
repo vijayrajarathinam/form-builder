@@ -17,6 +17,7 @@ import Header from "../components/commons/Header";
 import { ThemeContext } from "../contextProvider/ThemeContextProvider";
 import Image from "../components/commons/Image";
 import "./Dashboard.css";
+import { Link } from "react-router-dom";
 
 const spring = {
   type: "spring",
@@ -27,14 +28,14 @@ const spring = {
 const sidebarItems = [
   [
     { id: "0", title: "Dashboard", icon: LibraryIcon, notifications: false, route: "/" },
-    { id: "1", title: "Courses", icon: NewspaperIcon, notifications: false, route: "/admin/courses" },
-    { id: "2", title: "Learners", icon: UserGroupIcon, notifications: false, route: "/admin/learners" },
-    { id: "3", title: "Comments", icon: ChatAlt2Icon, notifications: 6, route: "/admin/comments" },
+    { id: "1", title: "Courses", icon: NewspaperIcon, notifications: false, route: "/" },
+    { id: "2", title: "Learners", icon: UserGroupIcon, notifications: false, route: "/" },
+    { id: "3", title: "Comments", icon: ChatAlt2Icon, notifications: 6, route: "/" },
   ],
   [
-    { id: "4", title: "Payment", icon: CreditCardIcon, notifications: false, route: "/admin/payments" },
-    { id: "5", title: "Upcoming Activities", icon: ExclamationIcon, notifications: false, route: "/admin/acivities" },
-    { id: "6", title: "Settings", icon: CogIcon, notifications: false, route: "/admin/settings" },
+    { id: "4", title: "Payment", icon: CreditCardIcon, notifications: false, route: "/" },
+    { id: "5", title: "Upcoming Activities", icon: ExclamationIcon, notifications: false, route: "/" },
+    { id: "6", title: "Settings", icon: CogIcon, notifications: false, route: "/settings" },
   ],
 ];
 
@@ -114,14 +115,15 @@ function Sidebar({ onSidebarHide, showSidebar }) {
 }
 function MenuItem({ item: { id, title, notifications, icon: Icon, route }, onClick, selected }) {
   return (
-    <div
+    <Link
+      to={route}
       className={clsx(
         "w-full mt-6 flex items-center px-3 sm:px-0 xl:px-3 justify-start sm:justify-center xl:justify-start sm:mt-6 xl:mt-3 cursor-pointer border-r-2 hover:bg-[#ddd] dark:hover:bg-black",
         selected === id ? "text-[#777] dark:text-white border-r-[#777] dark:border-r-white" : "border-r-transparent"
       )}
-      onClick={() => {
-        onClick(id);
-      }}
+      // onClick={() => {
+      //   onClick(id);
+      // }}
     >
       <Icon className="w-5 h-5" />
       <div className="block sm:hidden xl:block ml-2">{title}</div>
@@ -131,7 +133,7 @@ function MenuItem({ item: { id, title, notifications, icon: Icon, route }, onCli
           <div className="text-white text-sm">{notifications}</div>
         </div>
       )}
-    </div>
+    </Link>
   );
 }
 
