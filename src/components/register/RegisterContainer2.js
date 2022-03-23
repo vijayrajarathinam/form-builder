@@ -39,20 +39,6 @@ export default function ({ ...props }) {
     });
   };
 
-  // const inputs = useMemo(() => {
-  //   const obj = [];
-  //   struct?.sections?.forEach((section) =>
-  //     section.rows.forEach((row) => row.columns.forEach((props) => obj.push(props)))
-  //   );
-  //   return Object.keys(struct).length != 0 ? obj : {};
-  // }, [struct]);
-
-  // // useEffect(() => {
-  // //   let obj = {};
-  // //   inputs > 0 && inputs.forEach((input) => (obj[input.label] = ""));
-  // //   setData(obj);
-  // // }, []);
-
   if (status == "progress") return <Form {...props} createRecord={createRecord} struct={struct} />;
   else if (status == "success") {
     return (
@@ -112,6 +98,7 @@ const Form = reduxForm({
                   type={props.type}
                   text={props.text}
                   label={props.text}
+                  logic={props.logic}
                   {...props}
                   component={({ ...props }) => middleware(props)}
                 />

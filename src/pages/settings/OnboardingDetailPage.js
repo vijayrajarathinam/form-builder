@@ -7,11 +7,12 @@ import FormComponent from "../../components/forms/FormComponent";
 import { getAllForms, modifyForm } from "../../redux/actions/formActions";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import ThemeBuilder from "../../components/forms/theme/ThemeBuilder";
 
 function OnboardingDetailPage() {
   const [toggle, toggleDropdown] = useState(false);
+  const [theme, setTheme] = useState(false);
   const [form, setForm] = useState({ name: "Form Heading", struct: {} });
-  // const [questions, setQuestions] = useState([]);
   const { error, data, loading } = useSelector((state) => state.forms);
   const [modal, showModal] = useState(false);
   const handleClose = () => showModal(false);
@@ -100,29 +101,33 @@ function OnboardingDetailPage() {
               className={`${
                 toggle ? "block" : "hidden"
               } absolute right-0 top-full mt-1 z-10 w-44 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700`}
-              style={{ border: "1px solid #ccc" }}
+              style={{ border: "1px solid #ccc", zIndex: 1 }}
             >
               <ul className="py-1" aria-labelledby="dropdownButton">
                 <li>
                   <a
                     href="#"
-                    className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    className="block cursor-pointer py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
                     Save As Draft
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a
                     href="#"
                     className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
                     Preview This Page
                   </a>
-                </li>
+                </li> */}
                 <li>
                   <a
-                    href="#"
-                    className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    // href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setTheme(true);
+                    }}
+                    className="block cursor-pointer py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
                     Theme Settings
                   </a>
@@ -141,6 +146,15 @@ function OnboardingDetailPage() {
 
         <FormComponent questions={questions} form={form.struct} setForm={setForm} />
         <CreateSectionModal show={modal} handleClose={handleClose} addSection={addSection} />
+        <ThemeBuilder
+          handleClose={(e) => {
+            // e.preventDefault();
+            // if (e.target === e.currentTarget) {
+            setTheme(false);
+            // }
+          }}
+          show={theme}
+        />
       </div>
     </motion.div>
   );

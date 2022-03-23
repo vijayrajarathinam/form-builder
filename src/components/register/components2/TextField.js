@@ -1,7 +1,36 @@
 import React from "react";
+import { useSelector } from "react-redux";
+function TextField({ text, input, isRequired, label, type, meta: { touched, error }, ...props }) {
+  const { logic } = props;
+  const form = useSelector((state) => state.form.form);
 
-function TextField({ text, input, isRequired, label, type, meta: { touched, error } }) {
-  return (
+  const andDisplay = React.useMemo(() => {
+    let notValid = true;
+    if (logic?.and.length !== 0 && form?.values) {
+      for (let an of logic.and) {
+        let value = an.value,
+          label = an.field.label;
+        if (form.values[label] && form.values[label] == value) notValid = false;
+        else notValid = true;
+      }
+    }
+    return logic?.and.length !== 0 ? notValid : !notValid;
+  }, [form]);
+
+  const orDisplay = React.useMemo(() => {
+    let notValid = true;
+    if (logic?.or.length !== 0 && form?.values) {
+      for (let an of logic.or) {
+        let value = an.value,
+          label = an.field.label;
+        if (form.values[label] && form.values[label] == value) return false;
+        else notValid = true;
+      }
+    }
+    return logic?.or.length !== 0 ? notValid : !notValid;
+  }, [form]);
+
+  const render = () => (
     <div className="flex w-full flex-col py-4 px-2">
       <label for={label} className="inline-flex mb-2 text-sm text-gray-800 capitalize">
         {text}
@@ -20,6 +49,12 @@ function TextField({ text, input, isRequired, label, type, meta: { touched, erro
       </div>
     </div>
   );
+
+  console.log(logic.default, !andDisplay, !orDisplay);
+  if (logic.default == "hide")
+    if (!andDisplay && !orDisplay) return render();
+    else return <></>;
+  else return render();
 }
 
 export default TextField;

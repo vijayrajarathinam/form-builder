@@ -60,6 +60,7 @@ function FormRow({ children, addColumn, sectionId, rowId }) {
           className={` ${
             toggle ? "block" : "hidden"
           } flex gap-x-2 absolute right-0 top-0 px-3 py-2 border-l border-b border-gray-300 bg-gray-50`}
+          style={{ zIndex: 1 }}
         >
           <div onClick={onAddClick} className="flex gap-1 items-center border-r border-gray-400 pr-2 cursor-pointer">
             <PlusIcon className="h-4 w-4" />

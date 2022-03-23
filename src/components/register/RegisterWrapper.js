@@ -7,6 +7,7 @@ import WizardForm from "./wizard/WizardForm";
 }
 function RegisterWrapper({ data }) {
   const isWizard = data.wizard || false;
+  console.log(data.struct);
   return (
     <div className="bg-white h-auto container">
       <div className="my-20 w-full max-w-50 mx-auto border border-gray-300 rounded-lg p-1 h-auto">

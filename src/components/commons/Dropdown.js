@@ -7,6 +7,7 @@ function classNames(...classes) {
 }
 
 export default function DropDown({ options = [], select = {}, onChange = null, name = "" }) {
+  console.log(select);
   const [selected, setSelected] = useState(select || options[0]);
 
   function onSelected(sel) {

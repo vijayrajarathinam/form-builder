@@ -96,7 +96,6 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
     e.preventDefault();
     const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
-
     setInput((input) => ({
       ...input,
       ["logic"]: {
@@ -111,15 +110,26 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
     const target = e.target;
     const value = target.value;
     console.log(value);
-    setInput((input) => ({
-      ...input,
-      ["logic"]: {
-        ...input.logic,
-        [title]: input.logic[title].map((_, rId) => {
-          return rowId == rId ? { ..._, ["value"]: value } : _;
-        }),
-      },
-    }));
+    setInput((input) => {
+      console.log({
+        ...input,
+        ["logic"]: {
+          ...input.logic,
+          [title]: input.logic[title].map((_, rId) => {
+            return rowId == rId ? { ..._, ["value"]: "" + value } : _;
+          }),
+        },
+      });
+      return {
+        ...input,
+        ["logic"]: {
+          ...input.logic,
+          [title]: input.logic[title].map((_, rId) => {
+            return rowId == rId ? { ..._, ["value"]: "" + value } : _;
+          }),
+        },
+      };
+    });
   }
   function deleteRow(title, rowId) {
     setInput((input) => ({
@@ -338,7 +348,11 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
                   </label>
                 </div>
                 <div className="md:w-2/3">
-                  <DropDown options={options} select={options[0]} onChange={setType} />
+                  <DropDown
+                    options={options}
+                    select={options.find((opt) => opt.value === input.type)}
+                    onChange={setType}
+                  />
                 </div>
               </div>
               <div className="form-check px-3">
@@ -377,7 +391,11 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
                         </label>
                       </div>
                       <div className="md:w-2/3">
-                        <DropDown options={logicOptions} select={logicOptions[0]} onChange={setDefaultLogic} />
+                        <DropDown
+                          options={logicOptions}
+                          select={logicOptions.find((opt) => opt.value === input.logic.default)}
+                          onChange={setDefaultLogic}
+                        />
                       </div>
                     </div>
                     {/* table and */}
