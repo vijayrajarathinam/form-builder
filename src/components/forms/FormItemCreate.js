@@ -4,10 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import DropDown from "../commons/Dropdown";
 import { SaveIcon, SaveAsIcon, TrashIcon } from "@heroicons/react/outline";
 import LogicTable from "./LogicTable";
+import useMediaQuery from "../../hooks/useMediaQuery";
 
 const variants = {
-  start: { y: 100, x: "-50%", transition: { duration: 0.5 } },
-  stop: { y: -100, x: "-50%", transition: { repeatDelay: 3 } },
+  start: { y: 50, x: "-50%", transition: { duration: 0.5 } },
+  stop: { y: -50, x: "-50%", transition: { repeatDelay: 3 } },
 };
 
 const options = [
@@ -39,6 +40,12 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
   const modal = "fixed top-0 left-0 w-full h-full bg-black/[0.6]";
   const [input, setInput] = React.useState(isEmpty ? defaultItem : item);
   const [message, setMessage] = React.useState("");
+  const isSmall = useMediaQuery("(min-width: 480px)");
+
+  const variants = {
+    start: { y: isSmall ? 50 : -10, x: "-50%", transition: { duration: 0.5 } },
+    stop: { y: isSmall ? -50 : 0, x: "-50%", transition: { repeatDelay: 3 } },
+  };
 
   function onInputChange(e) {
     e.preventDefault();
@@ -305,7 +312,7 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
               <XIcon className="w-6 h-6 text-gray-600" />
             </button>
           </div>
-          <div className="overflow-y-scroll scrollbar-hide" style={{ height: "27rem" }}>
+          <div className="overflow-y-scroll scrollbar-hide h-[27rem]">
             <div className="flex flex-col items-start gap-5 my-5 h-auto">
               {message.length != 0 && <p className="text-red-500 text-xs w-full italic mt-3 text-center">{message}</p>}
               <div className="md:flex md:items-center px-2 ">
@@ -381,22 +388,19 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
                     Logic
                   </summary>
                   <div className="p-2">
-                    <div className="md:flex w-1/2 pl-3 md:items-center ">
-                      <div className="md:w-2/3">
-                        <label
-                          className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-                          for="input-type"
-                        >
-                          Default Visibility
-                        </label>
-                      </div>
-                      <div className="md:w-2/3">
-                        <DropDown
-                          options={logicOptions}
-                          select={logicOptions.find((opt) => opt.value === input.logic.default)}
-                          onChange={setDefaultLogic}
-                        />
-                      </div>
+                    <div className="flex w-full md:w-1/2 pl-3 items-center ">
+                      {/* <div className="md:w-2/4"> */}
+                      <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="input-type">
+                        Default Visibility
+                      </label>
+                      {/* </div> */}
+                      {/* <div className="md:w-2/4"> */}
+                      <DropDown
+                        options={logicOptions}
+                        select={logicOptions.find((opt) => opt.value === input.logic.default)}
+                        onChange={setDefaultLogic}
+                      />
+                      {/* </div> */}
                     </div>
                     {/* table and */}
                     <LogicTable
@@ -424,10 +428,10 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
               {/* accordion ends*/}
             </div>
           </div>
-          <div className="flex mt-5 gap-x-2">
+          <div className="flex flex-col md:flex-row mt-5 gap-2">
             <button
               onClick={preModalSubmit}
-              className="inline-flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
+              className="inline-flex w-auto items-center bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 md:py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
             >
               <SaveIcon className="w-4 h-4" />
               Save
@@ -435,12 +439,12 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
 
             <button
               onClick={preModalSubmitAndContinue}
-              className="inline-flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
+              className="inline-flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 md:py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
             >
               <SaveAsIcon className="w-4 h-4" />
               Save And Continue
             </button>
-            <button className="inline-flex items-center bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline">
+            <button className="inline-flex items-center bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 md:py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline">
               <TrashIcon className="w-4 h-4" />
               Remove
             </button>

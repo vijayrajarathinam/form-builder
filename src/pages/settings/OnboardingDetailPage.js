@@ -8,6 +8,7 @@ import { getAllForms, modifyForm } from "../../redux/actions/formActions";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ThemeBuilder from "../../components/forms/theme/ThemeBuilder";
+import Button, { Primary } from "../../components/commons/Button";
 
 function OnboardingDetailPage() {
   const [toggle, toggleDropdown] = useState(false);
@@ -70,7 +71,8 @@ function OnboardingDetailPage() {
           { link: `/settings/formbuilder/${formId}`, text: `${formId}` },
         ]}
       />
-      <div className="flex justify-between mt-5">
+      <Button.Primary Icon={PlusCircleIcon} text="hello" onClick={() => {}} />
+      <div className="flex flex-col h-20 md:h-10 md:flex-row justify-between mt-5">
         <h3 className="font-bold text-3xl">Form Builder</h3>
         <div className="flex gap-x-2">
           <button
@@ -112,19 +114,11 @@ function OnboardingDetailPage() {
                     Save As Draft
                   </a>
                 </li>
-                {/* <li>
-                  <a
-                    href="#"
-                    className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Preview This Page
-                  </a>
-                </li> */}
                 <li>
                   <a
-                    // href="#"
                     onClick={(e) => {
                       e.preventDefault();
+                      toggleDropdown(false);
                       setTheme(true);
                     }}
                     className="block cursor-pointer py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
