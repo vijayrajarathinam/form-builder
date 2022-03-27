@@ -10,14 +10,16 @@ import {
   CreditCardIcon,
   ExclamationIcon,
   CogIcon,
+  FastForwardIcon,
 } from "@heroicons/react/solid";
-import { XCircleIcon } from "@heroicons/react/outline";
-import { motion } from "framer-motion";
+import { ArrowSmRightIcon, XCircleIcon } from "@heroicons/react/outline";
+import { AnimatePresence, motion } from "framer-motion";
 import Header from "../components/commons/Header";
 import { ThemeContext } from "../contextProvider/ThemeContextProvider";
-import Image from "../components/commons/Image";
+// import Image from "../components/commons/Image";
 import "./Dashboard.css";
 import { Link } from "react-router-dom";
+import Button from "../components/commons/Button";
 
 const spring = {
   type: "spring",
@@ -121,9 +123,6 @@ function MenuItem({ item: { id, title, notifications, icon: Icon, route }, onCli
         "w-full mt-6 flex items-center px-3 sm:px-0 xl:px-3 justify-start sm:justify-center xl:justify-start sm:mt-6 xl:mt-3 cursor-pointer border-r-2 hover:bg-[#ddd] dark:hover:bg-black",
         selected === id ? "text-[#777] dark:text-white border-r-[#777] dark:border-r-white" : "border-r-transparent"
       )}
-      // onClick={() => {
-      //   onClick(id);
-      // }}
     >
       <Icon className="w-5 h-5" />
       <div className="block sm:hidden xl:block ml-2">{title}</div>
@@ -137,9 +136,38 @@ function MenuItem({ item: { id, title, notifications, icon: Icon, route }, onCli
   );
 }
 
+const steps = [
+  {
+    text: "<strong>Menu Items</strong> helps us to redirect ",
+    start: { y: 130, x: 250 },
+    stop: { y: -130, x: 250 },
+  },
+  {
+    text: "You can toggle between <strong>dark</strong> and <strong>light</strong> mode ",
+    start: { y: 620, x: 250 },
+    stop: { y: -620, x: 250 },
+  },
+  {
+    text: "We get <strong>notification</strong> on all the actions ",
+    start: { y: 80, x: 1080 },
+    stop: { y: -80, x: 1080 },
+  },
+  {
+    text: "Have control over your information in <strong>Profile section</strong>",
+    start: { y: 80, x: 1180 },
+    stop: { y: -80, x: 1180 },
+  },
+];
+
 function Content({ user, onSidebarHide }) {
+  const [step, setStep] = useState(0);
+  const [show, setDisplay] = useState(true);
+  const handleClose = () => setDisplay(false);
+  const next = () => setStep((curr) => curr + 1);
+  const props = { show, handleClose, next };
+
   return (
-    <div className="flex w-full">
+    <div className="flex w-full relative">
       <div className="w-full h-screen hidden sm:block sm:w-20 xl:w-60 flex-shrink-0">.</div>
       <div className="h-screen flex-grow overflow-x-hidden overflow-auto flex flex-wrap content-start ">
         <Header user={user} IconButton={IconButton} onSidebarHide={onSidebarHide} />
@@ -147,12 +175,55 @@ function Content({ user, onSidebarHide }) {
           <h1>Dashboard</h1>
         </div>
       </div>
+      <UIGuide value={steps[step]} {...props} />
     </div>
   );
 }
 
 function IconButton({ onClick = () => {}, icon: Icon, className = "w-4 h-4" }) {
   return <Icon onClick={onClick} className={clsx(className, "text-gray-600")} />;
+}
+
+function UIGuide({ value, next, show, handleClose }) {
+  const modal = "fixed top-0 left-0 w-full h-full bg-black/[0.1]";
+  function variants({ start, stop }) {
+    return {
+      start: { y: start.y, x: start.x, transition: { duration: 0.5 } },
+      stop: { y: stop.y, x: stop.x, transition: { repeatDelay: 3 } },
+    };
+  }
+
+  return (
+    <AnimatePresence>
+      <div className={modal + ` ${show ? "block" : "hidden"}`} style={{ zIndex: 1 }}>
+        <motion.section
+          variants={variants(value)}
+          animate={show ? "start" : "stop"}
+          className="fixed rounded-sm bg-white w-1/5 h-auto shadow-material px-5 py-3"
+        >
+          <p dangerouslySetInnerHTML={{ __html: value.text }} />
+
+          <div className="flex justify-between items-center px-0.5 mt-5">
+            <Button.Default
+              className="p-2 h-5 text-sm shadow-none 
+              !bg-transparent !text-gray-500"
+              style={{ padding: "0.25rem", height: "2rem" }}
+              Icon={FastForwardIcon}
+              text="Skip This Tour"
+              onClick={() => handleClose()}
+            />
+            <Button.Primary
+              className="p-2 h-5 text-sm shadow-none"
+              style={{ padding: "0.25rem", height: "2rem" }}
+              Icon={ArrowSmRightIcon}
+              text="Next"
+              onClick={() => next()}
+            />
+          </div>
+        </motion.section>
+      </div>
+    </AnimatePresence>
+  );
 }
 
 export default Dashboard;

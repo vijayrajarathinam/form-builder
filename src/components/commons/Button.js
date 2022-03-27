@@ -18,7 +18,7 @@ export function createSound(fr, time, _type, vol) {
   }, time);
 }
 
-export const Primary = ({ text, Icon, onClick, className }) => {
+export const Primary = ({ text, Icon, onClick, style, className }) => {
   const onButtonClick = (func) => {
     return (e) => {
       e.preventDefault();
@@ -27,6 +27,7 @@ export const Primary = ({ text, Icon, onClick, className }) => {
   };
   return (
     <button
+      style={style}
       onClick={onButtonClick(onClick)}
       onMouseUp={(e) => createSound(350, 50, "triangle", 0.07)}
       onMouseDown={(e) => createSound(350, 50, "triangle", 0.05)}
@@ -58,7 +59,7 @@ export const Danger = ({ text, Icon, onClick, className }) => {
   );
 };
 
-export const Default = ({ text, Icon, onClick, className }) => {
+export const Default = ({ text, Icon, onClick, className, style }) => {
   const mouseUp = () => new Audio(DEFAULT_CLICK_AUDIO_URL).play();
   const mouseDown = () => new Audio(DEFAULT_CLICK_UP_AUDIO_URL).play();
   const onButtonClick = (func) => {
@@ -69,6 +70,7 @@ export const Default = ({ text, Icon, onClick, className }) => {
   };
   return (
     <button
+      style={style}
       onClick={onButtonClick(onClick)}
       onMouseUp={mouseUp}
       onMouseDown={mouseDown}

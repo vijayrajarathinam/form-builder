@@ -1,19 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
-// import { MoonIcon, SunIcon } from "@heroicons/react/solid";
-import { SaveIcon, SaveAsIcon, TrashIcon } from "@heroicons/react/outline";
+import { SaveIcon } from "@heroicons/react/outline";
 import { FileUploader } from "react-drag-drop-files";
 import { motion, AnimatePresence } from "framer-motion";
 import useMediaQuery from "../../../hooks/useMediaQuery";
 import Button from "../../commons/Button";
-// import { signOut, onAuthStateChanged } from "firebase/auth";
-// import { collection, getDocs } from "firebase/firestore";
-import { auth, db, storage } from "../../../firebase";
+import { storage } from "../../../firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { toast } from "react-toastify";
-// import "./ThemeBuilder.css";
 const spring = { type: "spring", stiffness: 700, damping: 30 };
 const fileTypes = ["JPG", "PNG", "GIF"];
-const BUCKET_NAME = "gs://form_images";
 
 export default function ({ handleClose, show, form, setForm, ...props }) {
   const [file, setFile] = useState(null);
@@ -65,6 +60,11 @@ export default function ({ handleClose, show, form, setForm, ...props }) {
     setLoading(true);
     setTimeout(() => setLoading(false), 3000);
     props.save();
+  };
+
+  const setFormWizard = (e) => {
+    setForm((form) => ({ ...form, ["wizard"]: !form?.wizard }));
+    setWizard((w) => !w);
   };
 
   const onInputChange = (e) => {
@@ -123,7 +123,6 @@ export default function ({ handleClose, show, form, setForm, ...props }) {
                   className="inline-flex mb-2 capitalize text-[#7c7a8a] font-bold md:text-right md:mb-1 pr-4"
                 >
                   Sub Text
-                  {/* <span className="text-red-500 pl-1">*</span> */}
                 </label>
                 <div>
                   <input
@@ -133,7 +132,6 @@ export default function ({ handleClose, show, form, setForm, ...props }) {
                     onChange={onInputChange}
                     className={`w-full px-3 py-2 text-gray-800 border border-gray-300 rounded outline-none bg-gray-50 placeholder-grey-50`}
                   />
-                  {/* {touched && error && <p className="text-red-500 text-xs italic mt-1 ml-1">{error}</p>} */}
                 </div>
               </div>
               <div className="flex items-center p-4 hover:bg-black/[0.02]">
@@ -184,9 +182,9 @@ export default function ({ handleClose, show, form, setForm, ...props }) {
                 </div>
                 <div
                   className={`bg-[#e4e3e8] flex items-center px-0.5 rounded-full h-6 w-10 cursor-pointer flex-shrink-0 relative ${
-                    wizard ? "justify-end bg-blue-500" : "justify-start bg-white"
+                    form?.wizard ? "justify-end bg-blue-500" : "justify-start bg-white"
                   }`}
-                  onClick={(e) => setWizard((w) => !w)}
+                  onClick={setFormWizard}
                 >
                   <span className="absolute left-0" />
                   <motion.div
