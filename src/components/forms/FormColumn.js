@@ -1,8 +1,8 @@
 import React from "react";
-import Modal from "./FormItemCreate";
+import { motion } from "framer-motion";
 import { PlusIcon } from "@heroicons/react/outline";
 import CustomeInputField from "./CustomeInputField";
-import { motion } from "framer-motion";
+import Modal from "./FormItemCreate";
 
 function FormColumn({ item = {}, questions, setData, sectionId, rowId, columnId }) {
   const isEmpty = Object.keys(item).length === 0;

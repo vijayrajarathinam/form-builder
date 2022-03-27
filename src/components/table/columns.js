@@ -1,6 +1,8 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { DuplicateIcon, EyeIcon } from "@heroicons/react/outline";
+import { modifyForm } from "../../redux/actions/formActions";
+import { DuplicateIcon, EyeIcon, EyeOffIcon, ServerIcon } from "@heroicons/react/outline";
 
 export default () => [
   {
@@ -48,22 +50,31 @@ export default () => [
   {
     Header: "Options",
     accessor: "options",
-    Cell: (data) => {
+    Cell: ({ cell }) => {
       const [clicked, setClick] = React.useState("copy the link....");
       const navigate = useNavigate();
+      const dispatch = useDispatch();
 
       function onCopyClick(e) {
         e.preventDefault();
         setClick("copied!!...");
         navigator.clipboard.writeText(
-          `${window.location.protocol + "//" + window.location.host}/register/${data.cell.row.original.id}`
+          `${window.location.protocol + "//" + window.location.host}/register/${cell.row.original.id}`
         );
         setTimeout(() => setClick("copy the link...."), 2000);
       }
 
       function onDetailClick(e) {
         e.preventDefault();
-        navigate(`/settings/formbuilder/${data.cell.row.original.id}`);
+        navigate(`/settings/formbuilder/${cell.row.original.id}`);
+      }
+
+      function onStatusClick(e) {
+        e.preventDefault();
+
+        let form = cell.row.original;
+        form["status"] = form.status == "active" ? "inactive" : "active";
+        dispatch(modifyForm(form, cell.row.original.id));
       }
 
       return (
@@ -76,7 +87,12 @@ export default () => [
               </span>
             </div>
           </div>
-          <EyeIcon className="h-5 w-5 cursor-pointer" onClick={onDetailClick} />
+          {cell.row.original.status == "active" ? (
+            <EyeOffIcon className="h-5 w-5 cursor-pointer" onClick={onStatusClick} />
+          ) : (
+            <EyeIcon className="h-5 w-5 cursor-pointer" onClick={onStatusClick} />
+          )}
+          <ServerIcon className="h-5 w-5 cursor-pointer" onClick={onDetailClick} />
         </div>
       );
     },

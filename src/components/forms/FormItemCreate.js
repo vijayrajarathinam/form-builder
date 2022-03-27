@@ -1,15 +1,10 @@
 import React from "react";
 import { XIcon } from "@heroicons/react/solid";
 import { motion, AnimatePresence } from "framer-motion";
-import DropDown from "../commons/Dropdown";
 import { SaveIcon, SaveAsIcon, TrashIcon } from "@heroicons/react/outline";
 import LogicTable from "./LogicTable";
+import DropDown from "../commons/Dropdown";
 import useMediaQuery from "../../hooks/useMediaQuery";
-
-const variants = {
-  start: { y: 50, x: "-50%", transition: { duration: 0.5 } },
-  stop: { y: -50, x: "-50%", transition: { repeatDelay: 3 } },
-};
 
 const options = [
   { id: 1, name: "Text Field", value: "text" },

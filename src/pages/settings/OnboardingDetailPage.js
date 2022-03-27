@@ -8,7 +8,9 @@ import { getAllForms, modifyForm } from "../../redux/actions/formActions";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ThemeBuilder from "../../components/forms/theme/ThemeBuilder";
-import Button, { Primary } from "../../components/commons/Button";
+import Button from "../../components/commons/Button";
+
+const ctx = new AudioContext();
 
 function OnboardingDetailPage() {
   const [toggle, toggleDropdown] = useState(false);
@@ -31,9 +33,15 @@ function OnboardingDetailPage() {
   const questions = useMemo(() => {
     const arr = [];
     if (!form.struct.sections) return arr;
-    form.struct.sections.forEach((section) =>
-      section.rows.forEach((row) => row.columns.forEach((props) => arr.push(props)))
-    );
+    if (form.status == "draft") {
+      form.draftStruct.sections.forEach((section) =>
+        section.rows.forEach((row) => row.columns.forEach((props) => arr.push(props)))
+      );
+    } else {
+      form.struct.sections.forEach((section) =>
+        section.rows.forEach((row) => row.columns.forEach((props) => arr.push(props)))
+      );
+    }
     return arr;
   }, [form?.struct]);
 
@@ -45,6 +53,21 @@ function OnboardingDetailPage() {
     return Object.keys(arr || {}).length === 0;
   };
 
+  function createSound(fr, time, _type, vol) {
+    const osc = ctx.createOscillator(),
+      gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = _type;
+    osc.start();
+    osc.frequency.value = fr;
+    gain.gain.value = vol;
+    setTimeout(() => {
+      osc.frequency.value = 0;
+      osc.stop();
+    }, time);
+  }
+
   function addSection(name) {
     setForm((fom) => {
       if (isEmpty(fom.struct)) return { ...fom, struct: { sections: [{ name, rows: [{ columns: [{}] }] }] } };
@@ -54,11 +77,31 @@ function OnboardingDetailPage() {
     });
   }
 
-  function save(e) {
-    e.preventDefault();
-
-    dispatch(modifyForm(form, formId));
+  function save() {
+    const activeForm = { ...form, ["status"]: "active" };
+    dispatch(modifyForm(activeForm, formId));
     toast.success("submitted successfully.....");
+  }
+
+  function saveAsDraft() {
+    const draftForm = {
+      ...form,
+      struct: data.find((d) => d.id === formId).struct,
+      draftStruct: form.struct,
+      ["status"]: "draft",
+    };
+    dispatch(modifyForm(draftForm, formId));
+    toast.success("Drafted");
+  }
+
+  function removeDraft() {
+    const draftForm = {
+      ...form,
+      draftStruct: {},
+      ["status"]: "active",
+    };
+    dispatch(modifyForm(draftForm, formId));
+    toast.success("Drafted removed");
   }
 
   return (
@@ -71,22 +114,17 @@ function OnboardingDetailPage() {
           { link: `/settings/formbuilder/${formId}`, text: `${formId}` },
         ]}
       />
-      <Button.Primary Icon={PlusCircleIcon} text="hello" onClick={() => {}} />
+
       <div className="flex flex-col h-20 md:h-10 md:flex-row justify-between mt-5">
         <h3 className="font-bold text-3xl">Form Builder</h3>
         <div className="flex gap-x-2">
-          <button
-            onClick={(e) => showModal(true)}
-            className="h-10 md:h-15 inline-flex items-center bg-lime-600 hover:bg-lime-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
-          >
-            <PlusCircleIcon className="w-4 h-4" />
-            Add Section
-          </button>
-
+          <Button.Default Icon={PlusCircleIcon} text="Add Section" onClick={() => showModal(true)} />
           <div className="h-10 md:h-15 relative flex h-15">
             <button
               onClick={save}
-              className="inline-flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 pl-5 pr-2 text-sm rounded-l-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
+              onMouseUp={(e) => createSound(350, 50, "triangle", 0.07)}
+              onMouseDown={(e) => createSound(350, 50, "triangle", 0.05)}
+              className="inline-flex items-center bg-lime-600 hover:bg-lime-700 text-white font-bold py-2 pl-5 pr-2 text-sm rounded-l-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
             >
               <DocumentTextIcon className="w-4 h-4" />
               Save
@@ -94,7 +132,9 @@ function OnboardingDetailPage() {
             <button
               data-dropdown-toggle="dropdown"
               onClick={(e) => toggleDropdown((val) => !val)}
-              className="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2.5 px-2 text-sm rounded-r-lg shadow outline-none focus:outline-none focus:shadow-outline"
+              onMouseUp={(e) => createSound(350, 50, "triangle", 0.07)}
+              onMouseDown={(e) => createSound(350, 50, "triangle", 0.05)}
+              className="bg-lime-600 hover:bg-lime-700 text-white font-bold py-2.5 px-2 text-sm rounded-r-lg shadow outline-none focus:outline-none focus:shadow-outline"
             >
               <DotsVerticalIcon className="w-4 h-4" />
             </button>
@@ -108,12 +148,22 @@ function OnboardingDetailPage() {
               <ul className="py-1" aria-labelledby="dropdownButton">
                 <li>
                   <a
-                    href="#"
+                    onClick={saveAsDraft}
                     className="block cursor-pointer py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
                     Save As Draft
                   </a>
                 </li>
+                {form.status == "draft" && (
+                  <li>
+                    <a
+                      onClick={removeDraft}
+                      className="block cursor-pointer py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    >
+                      Remove the Draft
+                    </a>
+                  </li>
+                )}
                 <li>
                   <a
                     onClick={(e) => {
@@ -138,17 +188,13 @@ function OnboardingDetailPage() {
           <p className="self-start text-sm">Please fill all the required fields</p>
         </div>
 
-        <FormComponent questions={questions} form={form.struct} setForm={setForm} />
-        <CreateSectionModal show={modal} handleClose={handleClose} addSection={addSection} />
-        <ThemeBuilder
-          handleClose={(e) => {
-            // e.preventDefault();
-            // if (e.target === e.currentTarget) {
-            setTheme(false);
-            // }
-          }}
-          show={theme}
+        <FormComponent
+          questions={questions}
+          form={form.status == "draft" ? form.draftStruct : form.struct}
+          setForm={setForm}
         />
+        <CreateSectionModal show={modal} handleClose={handleClose} addSection={addSection} />
+        <ThemeBuilder form={form} setForm={setForm} save={save} handleClose={(e) => setTheme(false)} show={theme} />
       </div>
     </motion.div>
   );
@@ -166,9 +212,7 @@ const CreateSectionModal = ({ handleClose, show, addSection }) => {
   const modal = "fixed top-0 left-0 w-full h-full bg-black/[0.6]";
   // const dispatch = useDispatch();
 
-  function onModalSubmit(e) {
-    e.preventDefault();
-    // dispatch(addNewForm({ name, status: "active", struct: {} }));
+  function onModalSubmit() {
     addSection(name);
     toast.success("Section Created");
     handleClose();
@@ -199,21 +243,8 @@ const CreateSectionModal = ({ handleClose, show, addSection }) => {
             </div>
           </div>
           <div className="flex mt-5 gap-x-2 justify-end">
-            <button
-              onClick={onModalSubmit}
-              className="inline-flex items-center bg-lime-600 hover:bg-lime-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
-            >
-              <PlusCircleIcon className="w-4 h-4" />
-              Create
-            </button>
-
-            <button
-              onClick={handleClose}
-              className="inline-flex items-center bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
-            >
-              <XIcon className="w-4 h-4" />
-              Cancel
-            </button>
+            <Button.Primary Icon={PlusCircleIcon} text="Create" onClick={() => onModalSubmit()} />
+            <Button.Danger Icon={XIcon} text="Cancel" onClick={() => handleClose()} />
           </div>
         </motion.section>
       </div>

@@ -39,9 +39,10 @@ export function addNewForm(formData = {}) {
 }
 
 export function modifyForm(formData = {}, id = null) {
+  console.log(formData, id);
   return function (dispatch) {
     return updateForm(formData, id)
-      .then(() => getAllForms()(dispatch))
+      .then(() => setTimeout(() => getAllForms()(dispatch), 3000))
       .catch((err) => {
         dispatch({ type: UPDATE_FORM_FAILURE, payload: err.message });
         throw err;

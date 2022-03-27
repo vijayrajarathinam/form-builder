@@ -64,7 +64,7 @@ export default function ({ ...props }) {
     );
   } else if (status == "loading") {
     return (
-      <div className="relative w-full h-screen">
+      <div className="relative w-full h-[27rem]">
         <div className="absolute top-[50%] left-[50%] flex flex-col items-center transform -translate-x-[50%] -translate-y-[50%]">
           <div className="w-[100px] h-[100px] mx-0 my-[10px] px-[20px] pt-[20px] rounded text-center">
             <div className="load-3">

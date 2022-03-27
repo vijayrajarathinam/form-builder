@@ -4,15 +4,20 @@ import { SaveIcon, SaveAsIcon, TrashIcon } from "@heroicons/react/outline";
 import { FileUploader } from "react-drag-drop-files";
 import { motion, AnimatePresence } from "framer-motion";
 import useMediaQuery from "../../../hooks/useMediaQuery";
+import Button from "../../commons/Button";
 // import { signOut, onAuthStateChanged } from "firebase/auth";
 // import { collection, getDocs } from "firebase/firestore";
-// import { auth, db } from "../../firebase";
+import { auth, db, storage } from "../../../firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { toast } from "react-toastify";
 // import "./ThemeBuilder.css";
 const spring = { type: "spring", stiffness: 700, damping: 30 };
 const fileTypes = ["JPG", "PNG", "GIF"];
+const BUCKET_NAME = "gs://form_images";
 
-export default function ({ handleClose, show }) {
+export default function ({ handleClose, show, form, setForm, ...props }) {
   const [file, setFile] = useState(null);
+  const [progress, setProgress] = useState(0);
   const [wizard, setWizard] = useState(false);
   const [loading, setLoading] = useState(false);
   const useIsSmall = () => useMediaQuery("(min-width: 480px)");
@@ -35,12 +40,36 @@ export default function ({ handleClose, show }) {
   }, [isSmall]);
 
   const handleChange = (file) => {
-    setFile(file);
+    if (!file) return;
+    const storageRef = ref(storage, `/images/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        setProgress(progress);
+      },
+      (err) => console.log(err),
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          setFile(file.name);
+          toast.success("File uploaded successfully");
+          setForm((form) => ({ ...form, icon: url }));
+        });
+      }
+    );
   };
 
-  const submitForm = (e) => {
+  const submitForm = () => {
     setLoading(true);
     setTimeout(() => setLoading(false), 3000);
+    props.save();
+  };
+
+  const onInputChange = (e) => {
+    const { name, value } = e.target;
+    setForm((form) => ({ ...form, [name]: value }));
   };
 
   const loadingView = () => (
@@ -80,8 +109,9 @@ export default function ({ handleClose, show }) {
                 <div>
                   <input
                     name="name"
-                    //   placeholder="form name"
                     type="text"
+                    value={form.name}
+                    onChange={onInputChange}
                     className={`w-full px-3 py-2 text-gray-800 border border-gray-300 rounded outline-none bg-gray-50 placeholder-grey-50`}
                   />
                   {/* {touched && error && <p className="text-red-500 text-xs italic mt-1 ml-1">{error}</p>} */}
@@ -89,7 +119,7 @@ export default function ({ handleClose, show }) {
               </div>
               <div className="flex w-full flex-col p-4 hover:bg-black/[0.02]">
                 <label
-                  for="name"
+                  for="sub_text"
                   className="inline-flex mb-2 capitalize text-[#7c7a8a] font-bold md:text-right md:mb-1 pr-4"
                 >
                   Sub Text
@@ -97,9 +127,10 @@ export default function ({ handleClose, show }) {
                 </label>
                 <div>
                   <input
-                    name="name"
-                    //   placeholder="form name"
                     type="text"
+                    name="sub_text"
+                    value={form?.subText}
+                    onChange={onInputChange}
                     className={`w-full px-3 py-2 text-gray-800 border border-gray-300 rounded outline-none bg-gray-50 placeholder-grey-50`}
                   />
                   {/* {touched && error && <p className="text-red-500 text-xs italic mt-1 ml-1">{error}</p>} */}
@@ -107,17 +138,16 @@ export default function ({ handleClose, show }) {
               </div>
               <div className="flex items-center p-4 hover:bg-black/[0.02]">
                 <div className="grow">
-                  <label for="text" className="inline-flex capitalize text-[#7c7a8a] font-bold md:text-right pr-4">
+                  <label for="bg_color" className="inline-flex capitalize text-[#7c7a8a] font-bold md:text-right pr-4">
                     Page Background
                   </label>
                 </div>
                 <div className="">
                   <input
-                    name="background_color"
-                    // value={input.text}
-                    // onChange={onInputChange}
                     type="color"
-                    value="#ffffff"
+                    name="bg_color"
+                    value={form?.bg_color}
+                    onChange={onInputChange}
                     className="w-[25px] h-[25px] p-0.5 outline-none focus:outline-none focus:bg-white "
                     tabIndex="0"
                   />
@@ -126,7 +156,7 @@ export default function ({ handleClose, show }) {
               <div className="flex items-center p-4 hover:bg-black/[0.02]">
                 <div className="grow">
                   <label
-                    for="text"
+                    for="title_color"
                     className="inline-flex mb-2 capitalize text-[#7c7a8a] font-bold md:text-right md:mb-1 pr-4"
                   >
                     Title Color
@@ -134,9 +164,9 @@ export default function ({ handleClose, show }) {
                 </div>
                 <div className="">
                   <input
-                    name="color"
-                    // value={input.text}
-                    // onChange={onInputChange}
+                    name="title_color"
+                    value={form?.title_color}
+                    onChange={onInputChange}
                     type="color"
                     className="w-[25px] h-[25px] p-0.5  outline-none focus:outline-none focus:bg-white"
                     tabIndex="0"
@@ -169,7 +199,7 @@ export default function ({ handleClose, show }) {
               </div>
               <div className="flex w-full flex-col p-4 hover:bg-black/[0.02]">
                 <label
-                  for="name"
+                  for="success_message"
                   className="inline-flex mb-2 capitalize text-[#7c7a8a] font-bold md:text-right md:mb-1 pr-4"
                 >
                   Success Message
@@ -177,35 +207,32 @@ export default function ({ handleClose, show }) {
                 </label>
                 <div>
                   <input
-                    name="name"
                     type="text"
+                    name="success_message"
+                    value={form?.success_message}
+                    onChange={onInputChange}
                     className={`w-full px-3 py-2 text-gray-800 border border-gray-300 rounded outline-none bg-gray-50 placeholder-grey-50`}
                   />
                 </div>
               </div>
               <div className="flex w-full flex-col p-4 hover:bg-black/[0.02]">
                 <label
-                  for="name"
+                  for="failure_message"
                   className="inline-flex mb-2 capitalize text-[#7c7a8a] font-bold md:text-right md:mb-1 pr-4"
                 >
                   Failure Message
                 </label>
                 <div>
                   <input
-                    name="name"
-                    //   placeholder="form name"
                     type="text"
+                    name="failure_message"
+                    value={form?.failure_message}
+                    onChange={onInputChange}
                     className={`w-full px-3 py-2 text-gray-800 border border-gray-300 rounded outline-none bg-gray-50 placeholder-grey-50`}
                   />
                 </div>
               </div>
               <div className="flex w-full flex-col p-4 hover:bg-black/[0.02]">
-                {/* <label
-                for="name"
-                className="inline-flex mb-2 capitalize text-[#7c7a8a] font-bold md:text-right md:mb-1 pr-4"
-              >
-                Logo
-              </label> */}
                 <FileUploader
                   handleChange={handleChange}
                   label="Upload or Drop your LOGO here"
@@ -229,25 +256,61 @@ export default function ({ handleClose, show }) {
                             d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                           />
                         </svg>
+                        {form.icon ? (
+                          <span className="font-medium text-gray-600">
+                            <a href={form.icon} target="_blank" className="text-blue-600 underline pr-1">
+                              {file || form.icon}
+                            </a>
+                            Change the logo?
+                          </span>
+                        ) : (
+                          <span className="font-medium text-gray-600">
+                            <span className="text-blue-600 underline pr-1">Upload</span>
+                            or Drop your LOGO here
+                          </span>
+                        )}
+                      </span>
+
+                      {/* <span className="flex items-center space-x-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-6 h-6 text-gray-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                          />
+                        </svg>
                         <span className="font-medium text-gray-600">
                           <span className="text-blue-600 underline pr-1">Upload</span>
                           or Drop your LOGO here
                         </span>
                       </span>
-                      <input type="file" name="file_upload" className="hidden" />
+                    */}
                     </label>
                   </div>
                 </FileUploader>
               </div>
             </div>
             <div className="flex mt-5 gap-x-2 ">
-              <button
+              {/* <button
                 onClick={submitForm}
                 className="inline-flex w-full items-center justify-center bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-lg py-1.5 rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
               >
                 <SaveIcon className="w-4 h-4" />
                 Save
-              </button>
+              </button> */}
+              <Button.Primary
+                Icon={SaveIcon}
+                text="Save"
+                className="w-full text-lg py-1.5 items-center justify-center"
+                onClick={() => submitForm()}
+              />
             </div>
           </div>
           {/* full screen */}

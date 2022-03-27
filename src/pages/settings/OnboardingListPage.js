@@ -8,6 +8,7 @@ import { getAllForms } from "../../redux/actions/formActions";
 import Table, { columnArray } from "../../components/table";
 import Breadcrumb from "../../components/commons/Breadcrumb";
 import CreateFormModal from "./CreateFormModal";
+import Button from "../../components/commons/Button";
 
 function OnboardingForms() {
   const columns = useMemo(columnArray, []);
@@ -36,13 +37,7 @@ function OnboardingForms() {
       />
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Onboarding Forms</h2>
-        <button
-          onClick={(e) => showModal(true)}
-          className="h-10 md:h-15 inline-flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
-        >
-          <PlusCircleIcon className="w-4 h-4" />
-          Add New Form
-        </button>
+        <Button.Default Icon={PlusCircleIcon} text="Add New Form" onClick={() => showModal(true)} />
       </div>
       <Table {...tableProps} />
       <CreateFormModal show={modal} handleClose={handleClose} />

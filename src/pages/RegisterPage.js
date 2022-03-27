@@ -4,10 +4,12 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllForms } from "../redux/actions/formActions";
 import Register from "../components/register";
+import { Helmet } from "react-helmet";
+import NotFoundPage from "./NotFoundPage";
 
 function RegisterPage() {
   const { error, data, loading } = useSelector((state) => state.forms);
-  const [form, setForm] = useState({ name: "Form Heading", formStatus: "loading", struct: {} });
+  const [form, setForm] = useState({ name: "Loading....", formStatus: "loading", struct: {} });
   const dispatch = useDispatch();
   const { formId } = useParams();
 
@@ -22,10 +24,23 @@ function RegisterPage() {
 
   React.useEffect(() => {
     if (data && loading === false) {
-      setForm({ ...data.find((d) => d.id === formId), formStatus: "progress" });
+      const result = data.find((d) => d.id === formId);
+      console.log(result);
+      if (result) setForm({ ...result, formStatus: "progress" });
+      else setForm(null);
     }
   }, [data, loading]);
-  return <Register data={form} />;
+
+  if (form)
+    return (
+      <>
+        <Helmet>
+          <style>{`body { background-color: ${form?.bg_color || "#fff"}; }`}</style>
+        </Helmet>
+        <Register data={form} />
+      </>
+    );
+  else return <NotFoundPage />;
 }
 
 export default RegisterPage;
