@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
-import { XIcon, DocumentTextIcon, PlusCircleIcon, DotsVerticalIcon } from "@heroicons/react/outline";
-import Breadcrumb from "../../components/commons/Breadcrumb";
-import FormComponent from "../../components/forms/FormComponent";
-import { getAllForms, modifyForm } from "../../redux/actions/formActions";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
+import * as outlineIcons from "@heroicons/react/outline";
+import { getAllForms, modifyForm } from "../../redux/actions/formActions";
 import ThemeBuilder from "../../components/forms/theme/ThemeBuilder";
+import FormComponent from "../../components/forms/FormComponent";
+import Breadcrumb from "../../components/commons/Breadcrumb";
 import Button from "../../components/commons/Button";
 
+const { XIcon, DocumentTextIcon, PlusCircleIcon, DotsVerticalIcon } = outlineIcons;
 const ctx = new AudioContext();
 
 function OnboardingDetailPage() {

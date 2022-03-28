@@ -7,7 +7,7 @@ function FormSection({ children, name = "Sections", sectionId, addRow }) {
 
   function onAddClick(e) {
     e.preventDefault();
-    //{ sections: [{ name, rows: [{ columns: [{}]  }] }] }
+
     addRow((data) => ({
       ...data,
       struct: {
@@ -25,6 +25,7 @@ function FormSection({ children, name = "Sections", sectionId, addRow }) {
 
   function onDeleteClick(e) {
     e.preventDefault();
+
     addRow((data) => ({
       ...data,
       struct: {

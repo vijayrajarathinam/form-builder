@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { PlusCircleIcon, XIcon } from "@heroicons/react/outline";
 import { addNewForm } from "../../redux/actions/formActions";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
 import Button from "../../components/commons/Button";
 
 const variants = {

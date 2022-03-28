@@ -7,7 +7,6 @@ function FormRow({ children, addColumn, sectionId, rowId }) {
 
   function onAddClick(e) {
     e.preventDefault();
-    //{ sections: [{ name, rows: [{ columns: [{}]  }] }] }
 
     addColumn((data) => {
       return {

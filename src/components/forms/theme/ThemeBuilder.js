@@ -1,28 +1,27 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 import { SaveIcon } from "@heroicons/react/outline";
 import { FileUploader } from "react-drag-drop-files";
 import { motion, AnimatePresence } from "framer-motion";
-import useMediaQuery from "../../../hooks/useMediaQuery";
 import Button from "../../commons/Button";
 import { storage } from "../../../firebase";
+import useMediaQuery from "../../../hooks/useMediaQuery";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { toast } from "react-toastify";
+
 const spring = { type: "spring", stiffness: 700, damping: 30 };
 const fileTypes = ["JPG", "PNG", "GIF"];
 
 export default function ({ handleClose, show, form, setForm, ...props }) {
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
-  const [wizard, setWizard] = useState(false);
   const [loading, setLoading] = useState(false);
   const useIsSmall = () => useMediaQuery("(min-width: 480px)");
   const isSmall = useIsSmall();
   const modal = "fixed top-0 left-0 w-full h-full bg-black/[0.6]";
 
   useEffect(() => {
-    const close = (e) => {
-      if (e.keyCode === 27) handleClose(e);
-    };
+    const close = (e) => e.keyCode === 27 && handleClose(e);
+
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
   }, []);
@@ -45,7 +44,7 @@ export default function ({ handleClose, show, form, setForm, ...props }) {
         const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
         setProgress(progress);
       },
-      (err) => console.log(err),
+      (err) => toast.error(err?.message),
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
           setFile(file.name);
@@ -62,10 +61,7 @@ export default function ({ handleClose, show, form, setForm, ...props }) {
     props.save();
   };
 
-  const setFormWizard = (e) => {
-    setForm((form) => ({ ...form, ["wizard"]: !form?.wizard }));
-    setWizard((w) => !w);
-  };
+  const setFormWizard = (e) => setForm((form) => ({ ...form, ["wizard"]: !form?.wizard }));
 
   const onInputChange = (e) => {
     const { name, value } = e.target;

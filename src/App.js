@@ -5,22 +5,22 @@ import { ToastContainer } from "react-toastify";
 import { onAuthStateChanged } from "firebase/auth";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 
-import DashboardPage from "./pages/DashboardPage";
+//components to be rendered as pages
 import SettingsPage from "./pages/settings";
+import DashboardPage from "./pages/DashboardPage";
 import Dashboard from "./components/commons/Dashboard";
 import OnboardingListPage from "./pages/settings/OnboardingListPage";
 import OnboardingDetailPage from "./pages/settings/OnboardingDetailPage";
 import RegisterPage from "./pages/RegisterPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
+import LoginPage from "./pages/LoginPage";
 
+//external css for all pages
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
-const AuthRoute = ({ user }) => {
-  return user ? <Outlet user={user} /> : <Navigate to="/login" />;
-};
+const AuthRoute = ({ user }) => (user ? <Outlet user={user} /> : <Navigate to="/login" />);
 
 function App() {
   const [user, setUser] = React.useState({});

@@ -1,31 +1,28 @@
 import clsx from "clsx";
 import React, { useState } from "react";
-import {
-  MoonIcon,
+import { Link } from "react-router-dom";
+import * as solidIcons from "@heroicons/react/solid";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowSmRightIcon, XCircleIcon } from "@heroicons/react/outline";
+import { ThemeContext } from "../contextProvider/ThemeContextProvider";
+import Header from "../components/commons/Header";
+import Button from "../components/commons/Button";
+import "./Dashboard.css";
+
+const {
   SunIcon,
+  CogIcon,
+  MoonIcon,
   LibraryIcon,
+  ChatAlt2Icon,
   NewspaperIcon,
   UserGroupIcon,
-  ChatAlt2Icon,
   CreditCardIcon,
   ExclamationIcon,
-  CogIcon,
   FastForwardIcon,
-} from "@heroicons/react/solid";
-import { ArrowSmRightIcon, XCircleIcon } from "@heroicons/react/outline";
-import { AnimatePresence, motion } from "framer-motion";
-import Header from "../components/commons/Header";
-import { ThemeContext } from "../contextProvider/ThemeContextProvider";
-// import Image from "../components/commons/Image";
-import "./Dashboard.css";
-import { Link } from "react-router-dom";
-import Button from "../components/commons/Button";
+} = solidIcons;
 
-const spring = {
-  type: "spring",
-  stiffness: 700,
-  damping: 30,
-};
+const spring = { type: "spring", stiffness: 700, damping: 30 };
 
 const sidebarItems = [
   [
@@ -115,7 +112,7 @@ function Sidebar({ onSidebarHide, showSidebar }) {
     </div>
   );
 }
-function MenuItem({ item: { id, title, notifications, icon: Icon, route }, onClick, selected }) {
+function MenuItem({ item: { id, title, notifications, icon: Icon, route }, selected }) {
   return (
     <Link
       to={route}

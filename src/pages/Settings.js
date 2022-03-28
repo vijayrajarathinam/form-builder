@@ -1,23 +1,24 @@
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import React, { useState } from "react";
-import {
-  MoonIcon,
+import * as solidIcons from "@heroicons/react/solid";
+import { XCircleIcon } from "@heroicons/react/outline";
+import { ThemeContext } from "../contextProvider/ThemeContextProvider";
+import FormComponent from "../components/forms/FormComponent";
+import Header from "../components/commons/Header";
+import "./Dashboard.css";
+
+const {
   SunIcon,
+  CogIcon,
+  MoonIcon,
   LibraryIcon,
+  ChatAlt2Icon,
   NewspaperIcon,
   UserGroupIcon,
-  ChatAlt2Icon,
   CreditCardIcon,
   ExclamationIcon,
-  CogIcon,
-} from "@heroicons/react/solid";
-import { XCircleIcon } from "@heroicons/react/outline";
-import { motion } from "framer-motion";
-import Header from "../components/commons/Header";
-import { ThemeContext } from "../contextProvider/ThemeContextProvider";
-
-import "./Dashboard.css";
-import FormComponent from "../components/forms/FormComponent";
+} = solidIcons;
 
 const spring = {
   type: "spring",

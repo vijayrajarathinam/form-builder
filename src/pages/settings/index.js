@@ -1,18 +1,20 @@
 import React, { useEffect, useState, useRef } from "react";
-import { motion } from "framer-motion";
-import {
-  ChevronRightIcon,
-  UserCircleIcon,
-  ServerIcon,
-  LockClosedIcon,
-  EyeIcon,
-  SupportIcon,
-  InformationCircleIcon,
-  SearchIcon,
-} from "@heroicons/react/outline";
-import Breadcrumb from "../../components/commons/Breadcrumb";
-import { Link } from "react-router-dom";
 import lottie from "lottie-web";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import * as outlineIcon from "@heroicons/react/outline";
+import Breadcrumb from "../../components/commons/Breadcrumb";
+
+const {
+  EyeIcon,
+  ServerIcon,
+  SearchIcon,
+  SupportIcon,
+  UserCircleIcon,
+  LockClosedIcon,
+  ChevronRightIcon,
+  InformationCircleIcon,
+} = outlineIcon;
 
 const settings = [
   { link: "#", name: "General", text: "Edit your profile details", icon: "UserCircleIcon", Icon: UserCircleIcon },

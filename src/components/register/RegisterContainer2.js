@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Field, reduxForm } from "redux-form";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/solid";
-import middleware from "./components2";
-import validate from "./wizard/validate";
-import { SubmissionError } from "redux-form";
+import React, { useState, useEffect } from "react";
+import { Field, reduxForm, SubmissionError } from "redux-form";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/solid";
 import { register } from "../../api/userApi";
+import validate from "./wizard/validate";
+import middleware from "./components2";
 import { auth } from "../../firebase";
 
 export default function ({ ...props }) {

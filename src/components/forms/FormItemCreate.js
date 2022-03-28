@@ -30,12 +30,12 @@ const defaultItem = {
   isRequired: false,
 };
 
-function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
+function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, handleClose }) {
   const isEmpty = Object.keys(item).length === 0;
-  const modal = "fixed top-0 left-0 w-full h-full bg-black/[0.6]";
-  const [input, setInput] = React.useState(isEmpty ? defaultItem : item);
   const [message, setMessage] = React.useState("");
   const isSmall = useMediaQuery("(min-width: 480px)");
+  const modal = "fixed top-0 left-0 w-full h-full bg-black/[0.6]";
+  const [input, setInput] = React.useState(isEmpty ? defaultItem : item);
 
   const variants = {
     start: { y: isSmall ? 50 : -10, x: "-50%", transition: { duration: 0.5 } },
@@ -111,7 +111,7 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
   function onValueChange(e, title, rowId) {
     const target = e.target;
     const value = target.value;
-    console.log(value);
+
     setInput((input) => {
       console.log({
         ...input,
@@ -163,6 +163,7 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
     setMessage(str);
     return bool;
   };
+
   function validate() {
     const { type, text, label } = input;
 
@@ -245,6 +246,7 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
       </div>
     );
   }
+
   function displayOptions() {
     return (
       <div className="px-4 py-5">
@@ -439,7 +441,10 @@ function FormItemCreate({ show, questions, item, onModalSubmit, handleClose }) {
               <SaveAsIcon className="w-4 h-4" />
               Save And Continue
             </button>
-            <button className="inline-flex items-center bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 md:py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline">
+            <button
+              onClick={onModalRemove}
+              className="inline-flex items-center bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 md:py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
+            >
               <TrashIcon className="w-4 h-4" />
               Remove
             </button>

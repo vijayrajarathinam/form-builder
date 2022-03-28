@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { BellIcon, XIcon, MenuIcon } from "@heroicons/react/solid";
 import { motion, AnimatePresence } from "framer-motion";
-// import { signOut, onAuthStateChanged } from "firebase/auth";
-// import { collection, getDocs } from "firebase/firestore";
-// import { auth, db } from "../../firebase";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { BellIcon, MenuIcon } from "@heroicons/react/solid";
+import { auth } from "../../firebase";
 import Image from "./Image";
 
 const Modal = ({ handleClose, show, username }) => {
@@ -30,16 +29,17 @@ const Modal = ({ handleClose, show, username }) => {
           handleClose(false);
         }}
       >
-        <p className="text-[#202124] tracking-tighter m-0 overflow-hidden inline-block text-ellipsis font-bold text-lg">
+        {/* <p className="text-[#202124] tracking-tighter m-0 overflow-hidden inline-block text-ellipsis font-bold text-lg">
           Username
-        </p>
+        </p> */}
 
         <p className="leading-tight mb-3 tracking-tight text-ellipsis overflow-hidden text-[#5f6368] font-normal text-[.875rem]">
-          email@mail.com
+          {username}
         </p>
 
         <button
-          class="text-gray-500 mt-1 bg-transparent border border-solid border-gray-500 hover:bg-gray-500 hover:text-white active:bg-gray-600 font-bold uppercase px-8 py-2 rounded-xl outline-none focus:outline-none  ease-linear transition-all duration-150"
+          onClick={() => signOut(auth)}
+          className="text-gray-500 mt-1 bg-transparent border border-solid border-gray-500 hover:bg-gray-500 hover:text-white active:bg-gray-600 font-bold uppercase px-8 py-2 rounded-xl outline-none focus:outline-none  ease-linear transition-all duration-150"
           type="button"
         >
           Logout
@@ -65,22 +65,12 @@ const Modal = ({ handleClose, show, username }) => {
 };
 
 function Header({ IconButton, onSidebarHide }) {
+  const [user, setUser] = useState({});
   const [show, onModal] = useState(false);
-  const users = {};
-  //   const [user, setUser] = useState({});
 
-  //   const usersCollection = collection(db, "users");
-
-  //   useEffect(() => {
-  //     onAuthStateChanged(auth, setUser);
-
-  //     const getUser = async () => {
-  //       const data = await getDocs(usersCollection);
-  //       const usr = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-  //       setUsers(usr.find((r) => r.id === user.uid));
-  //     };
-  //     getUser();
-  //   }, []);
+  useEffect(() => {
+    onAuthStateChanged(auth, setUser);
+  }, []);
 
   return (
     <div
@@ -109,10 +99,10 @@ function Header({ IconButton, onSidebarHide }) {
           <div className="relative h-15 w-15 lg:mx-auto border-pink-500 border-4 rounded-full">
             <Image
               className="rounded-full bg-black cursor-pointer hover:opacity-75"
-              src={`https://avatars.dicebear.com/api/pixel-art/${users?.name || "user"}.svg`}
+              src={`https://avatars.dicebear.com/api/pixel-art/${user?.email || "user"}.svg`}
               layout="fill"
             />
-            <Modal show={show} handleClose={() => onModal} username={users?.name || "user"} />
+            <Modal show={show} handleClose={() => onModal} username={user?.email || "user"} />
           </div>
         </div>
       </div>

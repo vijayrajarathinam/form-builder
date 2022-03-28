@@ -1,14 +1,9 @@
 import clsx from "clsx";
-import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Header from "./Header";
 
-const flow = {
-  start: {
-    width: 0,
-  },
-  end: { width: "100%" },
-};
+const flow = { start: { width: 0 }, end: { width: "100%" } };
 
 function Content({ user, content: Body, onSidebarHide }) {
   return (

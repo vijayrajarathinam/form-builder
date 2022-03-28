@@ -1,6 +1,6 @@
-import { ChevronRightIcon } from "@heroicons/react/solid";
 import React from "react";
 import { Link } from "react-router-dom";
+import { ChevronRightIcon } from "@heroicons/react/solid";
 
 function Breadcrumb({ crumbs = [] }) {
   return (

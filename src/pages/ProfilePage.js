@@ -12,7 +12,6 @@ export default function ProfilePage() {
 
   React.useEffect(() => {
     onAuthStateChanged(auth, setUser);
-    console.log(user);
     const getUser = async () => {
       const data = await getDocs(usersCollection);
       const usr = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
@@ -21,19 +20,14 @@ export default function ProfilePage() {
     getUser();
   }, [user]);
 
-  console.log(users);
-  //   console.log(Object.entries({ ...users }));
-
   return (
     <AnimatePresence>
-      {/* initial={false}> */}
       <Breadcrumb
         crumbs={[
           { link: "/", text: "dashboard" },
           { link: "/profile", text: "profile" },
         ]}
       />
-      {/* <p className="text-gray-600 text-2xl font-bold my-3">Profile</p> */}
 
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Profile</h2>

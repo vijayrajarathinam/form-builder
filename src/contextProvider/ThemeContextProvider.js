@@ -31,9 +31,7 @@ export const ThemeProvider = ({ initialTheme, children }) => {
     localStorage.setItem("color-theme", rawTheme);
   };
 
-  if (initialTheme) {
-    rawSetTheme(initialTheme);
-  }
+  if (initialTheme) rawSetTheme(initialTheme);
 
   React.useEffect(() => {
     rawSetTheme(theme);

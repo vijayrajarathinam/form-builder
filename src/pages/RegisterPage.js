@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllForms } from "../redux/actions/formActions";
 import Register from "../components/register";
-import { Helmet } from "react-helmet";
 import NotFoundPage from "./NotFoundPage";
 
 function RegisterPage() {
@@ -31,7 +31,8 @@ function RegisterPage() {
     }
   }, [data, loading]);
 
-  if (form)
+  if (form?.status === "inactive") return <NotFoundPage />;
+  else if (form)
     return (
       <>
         <Helmet>

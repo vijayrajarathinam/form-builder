@@ -2,10 +2,6 @@ import React from "react";
 import { PlusCircleIcon, TrashIcon, MenuIcon } from "@heroicons/react/outline";
 
 export default function ({ title, questions, rows, addRow, deleteRow, onLogicOptionChange, onValueChange, ...props }) {
-  // console.log(questions);
-
-  //   function getOptions({}) {}
-
   const getLogicOptionField = ({ type, ...rest }, title, rowId) => {
     const onChange = (e) => onValueChange(e, title, rowId);
     switch (type) {
@@ -102,6 +98,9 @@ export default function ({ title, questions, rows, addRow, deleteRow, onLogicOpt
                             value={row.field.label}
                             onChange={(e) => onLogicOptionChange(e, title, rowId)}
                             className="p-2 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white leading-tight bg-gray-200 border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            // console.log(questions);
+
+                            //   function getOptions({}) {}
                           >
                             {questions?.map(({ label, text }) => (
                               <option value={label}>{text}</option>

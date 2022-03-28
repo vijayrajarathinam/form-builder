@@ -7,10 +7,7 @@ import Modal from "./FormItemCreate";
 function FormColumn({ item = {}, questions, setData, sectionId, rowId, columnId }) {
   const isEmpty = Object.keys(item).length === 0;
   const [show, onModal] = React.useState(false);
-
-  function onButtonClick() {
-    onModal(true);
-  }
+  const onButtonClick = () => onModal(true);
 
   function onModalSubmit(item) {
     setData((data) => {
@@ -35,6 +32,28 @@ function FormColumn({ item = {}, questions, setData, sectionId, rowId, columnId 
     onModal(false);
   }
 
+  function onModalRemove() {
+    setData((data) => {
+      return {
+        ...data,
+        struct: {
+          sections: data.struct.sections.map((session, sid) => {
+            return {
+              name: session.name,
+              rows: session.rows.map((row, rid) => {
+                return {
+                  columns: row.columns.filter((column, cid) => {
+                    return sid === sectionId && rowId === rid && columnId === cid ? false : true;
+                  }),
+                };
+              }),
+            };
+          }),
+        },
+      };
+    });
+    onModal(false);
+  }
   return (
     <motion.div initial={{ x: "300px", opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="w-full">
       {isEmpty == true ? (
@@ -52,10 +71,11 @@ function FormColumn({ item = {}, questions, setData, sectionId, rowId, columnId 
       )}
       <Modal
         show={show}
-        questions={questions}
         item={item}
-        handleClose={() => onModal(false)}
+        questions={questions}
         onModalSubmit={onModalSubmit}
+        onModalRemove={() => onModalRemove()}
+        handleClose={() => onModal(false)}
       />
     </motion.div>
   );

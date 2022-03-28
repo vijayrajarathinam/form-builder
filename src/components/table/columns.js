@@ -1,8 +1,8 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { modifyForm } from "../../redux/actions/formActions";
 import { DuplicateIcon, EyeIcon, EyeOffIcon, ServerIcon } from "@heroicons/react/outline";
+import { modifyForm } from "../../redux/actions/formActions";
 
 export default () => [
   {

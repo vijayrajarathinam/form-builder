@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import { auth } from "../firebase";
 import { getAuth, signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from "firebase/auth";
 
 String.prototype.isEmpty = function () {
   return this.length === 0 || !this.trim();
 };
+
 function LoginPage() {
   const [user, setUser] = useState({
     username: "",
