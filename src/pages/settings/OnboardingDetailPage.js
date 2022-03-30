@@ -182,9 +182,11 @@ function OnboardingDetailPage() {
           </div>
         </div>
       </div>
-      <div className="w-full flex flex-col gap-y-5 relative p-4 mt-10 h-auto min-h-10 border-2 border-dashed border-gray-400 ">
-        <p className="text-gray-500 absolute -top-4 bg-white left-1/2 transform -translate-x-1/2 px-2">SECTIONS</p>
-        <div className="flex flex-col bg-gray-100 items-center gap-y-5 text-gray-700 border border-gray-100 px-4 pt-4 pb-2">
+      <div className="w-full flex flex-col gap-y-0.5  relative p-4 mt-10 h-auto min-h-10 border-2 border-dashed border-gray-400 ">
+        <p className="text-gray-500 absolute -top-4 bg-white dark:bg-[#1e1e1e] left-1/2 transform -translate-x-1/2 px-2">
+          SECTIONS
+        </p>
+        <div className="flex flex-col bg-gray-100 dark:bg-gray-700 dark:text-white/[0.5] items-center gap-y-5 text-gray-700 border border-gray-100 dark:border-gray-700 px-4 pt-4 pb-2">
           <h2 className="text-xl">{form.name}</h2>
           <p className="self-start text-sm">Please fill all the required fields</p>
         </div>

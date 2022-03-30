@@ -4,7 +4,7 @@ import { ChevronRightIcon } from "@heroicons/react/solid";
 
 function Breadcrumb({ crumbs = [] }) {
   return (
-    <nav class="flex mt-5 py-3 px-3 text-gray-700  dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
+    <nav class="flex my-5 py-3 px-3 text-gray-700 dark:bg-[#1e1e1e] dark:border-gray-700" aria-label="Breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-1">
         {crumbs.map((crumb, i, row) => (
           <div class="flex items-center gap-1 md:gap-2" key={i}>

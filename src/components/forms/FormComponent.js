@@ -19,41 +19,35 @@ function FormComponent({ form, setForm, questions }) {
 
   const onSectionDropEnd = ({ ...props }) => {
     if (!props.destination) return;
-
-    const startIndex = props.source.index;
-    const endIndex = props.destination.index;
-    const arr = form.sections;
-    setForm((data) => ({
-      ...data,
-      struct: {
-        sections: reorder(arr, startIndex, endIndex),
-      },
-    }));
+    if (props.type === "SECTIONS") {
+      const startIndex = props.source.index;
+      const endIndex = props.destination.index;
+      const arr = form.sections;
+      setForm((data) => ({
+        ...data,
+        struct: {
+          sections: reorder(arr, startIndex, endIndex),
+        },
+      }));
+    } else console.log(props);
   };
 
   return (
     <DragDropContext onDragEnd={onSectionDropEnd}>
       {!isEmpty(form) && (
-        <Droppable droppableId="droppable-section">
+        <Droppable droppableId="droppable-section" type="SECTIONS">
           {(provided, snapshot) => {
             return (
-              <div className="bg-white" ref={provided.innerRef} {...provided.droppableProps}>
+              <div className="bg-white dark:bg-[#1e1e1e]" ref={provided.innerRef} {...provided.droppableProps}>
                 {form.sections.map((section, sid) => (
                   <FormSection key={sid} name={section.name} sectionId={sid} addRow={setForm}>
                     {!isEmpty(section) &&
                       section.rows.map((row, rid) => (
                         <FormRow key={rid} sectionId={sid} rowId={rid} addColumn={setForm}>
-                          {row.columns.map((column, cid) => (
-                            <FormColumn
-                              questions={questions}
-                              item={column}
-                              sectionId={sid}
-                              rowId={rid}
-                              columnId={cid}
-                              setData={setForm}
-                              key={cid}
-                            />
-                          ))}
+                          {row.columns.map((column, cid) =>
+                            //prettier-ignore
+                            <FormColumn questions={questions} item={column} sectionId={sid} rowId={rid} columnId={cid} setData={setForm} key={cid} />
+                          )}
                         </FormRow>
                       ))}
                   </FormSection>

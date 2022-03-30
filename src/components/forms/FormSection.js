@@ -1,8 +1,8 @@
 import React from "react";
-import { Draggable } from "react-beautiful-dnd";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 import { PlusIcon, TrashIcon, ArrowsExpandIcon } from "@heroicons/react/outline";
 
-function FormSection({ children, name = "Sections", sectionId, addRow }) {
+function FormSection({ children, name = "Sections", section, questions, sectionId, addRow }) {
   const [toggle, setToggle] = React.useState(false);
 
   function onAddClick(e) {
@@ -41,9 +41,8 @@ function FormSection({ children, name = "Sections", sectionId, addRow }) {
       {(provided, snapshot) => {
         return (
           <div
-            className={`flex relative ${
-              snapshot.isDragging && "shadow-material bg-white"
-            } flex-col items-center gap-y-3 text-gray-500 border border-gray-300 my-4 p-3`}
+            className={`flex relative ${snapshot.isDragging && "shadow-material bg-white"} border border-gray-400
+            flex-col items-center gap-y-3 text-gray-500 my-4 p-3`}
             onMouseEnter={() => setToggle(true)}
             onMouseLeave={() => setToggle(false)}
             ref={provided.innerRef}
@@ -52,7 +51,7 @@ function FormSection({ children, name = "Sections", sectionId, addRow }) {
             <div
               className={`${
                 toggle ? "block" : "hidden"
-              } flex gap-x-2 absolute right-0 top-0 px-3 py-2 border-l border-b border-gray-300 bg-gray-50`}
+              } flex gap-x-2 absolute right-0 top-0 px-3 py-2 border-l border-b border-gray-400 bg-gray-50`}
             >
               <div
                 onClick={onAddClick}
@@ -70,7 +69,14 @@ function FormSection({ children, name = "Sections", sectionId, addRow }) {
             </div>
 
             <h2 className="text-xl self-start capitalize">{name}</h2>
-            {children}
+            <Droppable droppableId={`droppable-rows-${sectionId}`} type={"ROWS"}>
+              {(provided, snapshot) => (
+                <div className="w-full" ref={provided.innerRef} {...provided.droppableProps}>
+                  {children}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
           </div>
         );
       }}

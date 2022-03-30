@@ -63,17 +63,17 @@ function SettingsPage() {
         <h2 className="text-2xl font-bold">Settings</h2>
       </div>
 
-      <div class="mt-6 w-full flex items-center h-15 bg-white dark:bg-[#181818] rounded px-1 py-2 shadow-material">
-        <SearchIcon className="h-8 w-8 p-1 mx-2 dark:text-white" />
+      <div class="mt-6 w-full flex items-center h-15 bg-[#f8f8f8] dark:bg-[#181818] rounded px-1 py-2 shadow-material hover:bg-gray-200">
+        <SearchIcon className="h-8 w-8 p-1 mx-2 dark:text-slate-300" />
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search for a setting..."
-          className="h-full w-full outline-none dark:bg-[#181818]"
+          className="h-full w-full outline-none bg-[#f8f8f8] dark:bg-[#181818] hover:bg-gray-200"
         />
       </div>
-      <div class="block md:hidden mt-6 w-full bg-white rounded py-2 px-1 shadow-material">
-        <ul class="divide-y-2 divide-gray-100">
+      <div class="block md:hidden mt-6 w-full bg-white rounded py-2 px-1 shadow-material dark:bg-[#181818] dark:text-white">
+        <ul class="divide-y-2 divide-gray-100 dark:divide-gray-700 ">
           {getSettings().map(({ Icon, name, link }, i) => (
             <Link key={i} to={link} class="p-3 flex items-center cursor-pointer">
               <Icon className="h-8 w-8" />
@@ -125,10 +125,10 @@ function SettingsCard({ Icon, name, text, link, i, ...props }) {
     <Link
       key={i}
       to={link}
-      className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/4 text-black hover:text-black/50 dark:text-white"
+      className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/4 text-black hover:text-black/50 dark:text-slate-300"
       ref={container}
     >
-      <article className="overflow-hidden my-1 rounded shadow-material dark:bg-[#181818] hover:bg-gray-50">
+      <article className="overflow-hidden my-1 rounded shadow-material bg-[#f8f8f8] dark:bg-[#181818] hover:bg-gray-200">
         {/* <ChevronRightIcon className="p-1 h-[100px] w-full " /> */}
         <div className="p-1 h-[100px] w-full " ref={icon} />
         <header className="flex flex-col items-center justify-between leading-tight p-2 md:p-4 ">

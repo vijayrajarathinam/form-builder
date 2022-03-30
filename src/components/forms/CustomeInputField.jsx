@@ -16,7 +16,7 @@ function CustomeInputField({
   if (type == "text" || type == "email" || type == "number" || type == "file") {
     input = (
       <div className="flex w-full flex-col mb-2" onClick={onClick}>
-        <label for={label} className="inline-flex mb-2 text-sm text-gray-800">
+        <label for={label} className="inline-flex mb-2 text-sm text-gray-800 dark:text-white/[0.5]">
           {text}
           {isRequired ? <span className="text-red-500 pl-1">*</span> : <span />}
         </label>
@@ -24,7 +24,7 @@ function CustomeInputField({
           name={label}
           type={type}
           disabled={true}
-          className="w-full px-3 py-2 text-gray-800 border rounded outline-none bg-gray-50"
+          className="w-full px-3 py-2 text-gray-800 border rounded outline-none border-gray-300 dark:border-[#181818] bg-gray-50 dark:bg-[#181818]"
         />
         {subText && <p className="text-gray-500 text-xs italic mt-1 ml-1">{subText}</p>}
       </div>
@@ -32,6 +32,11 @@ function CustomeInputField({
   } else if (type == "dropdown") {
     input = (
       <div className="w-full" onClick={onClick}>
+        <label for={label} className="inline-flex mb-2 text-sm text-gray-800 dark:text-white/[0.5]">
+          {text}
+          {isRequired ? <span className="text-red-500 pl-1">*</span> : <span />}
+        </label>
+
         <DropDown options={options} select={options[0]} onClick={null} />
       </div>
     );
@@ -39,7 +44,7 @@ function CustomeInputField({
     input = (
       <div className="form-check w-full px-3" onClick={onClick}>
         <input
-          className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+          className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white dark:bg-[#181818] dark:border-[#181818] checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
           type="checkbox"
           value={defaultChecked}
           name={label}
@@ -52,19 +57,19 @@ function CustomeInputField({
   } else if (type == "radio") {
     input = (
       <div class="flex flex-col w-full justify-center" onClick={onClick}>
-        <label for={label} className="inline-flex mb-2 text-sm text-gray-800">
+        <label for={label} className="inline-flex mb-2 text-sm text-gray-800 dark:text-white/[0.5]">
           {text}
         </label>
         {options.map((option, i) => (
           <div class="form-check form-check-inline flex">
             <input
-              class="form-check-input form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+              class="form-check-input form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer dark:bg-[#181818] dark:border-[#181818] "
               type="radio"
               name={text}
               id={label.id}
               value={option.value}
             />
-            <label class="form-check-label inline-block text-gray-800" for={option.name}>
+            <label class="form-check-label inline-block text-gray-800 dark:text-white/[0.5]" for={option.name}>
               {option.value}
             </label>
           </div>
