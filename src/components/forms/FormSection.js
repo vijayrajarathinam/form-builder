@@ -69,7 +69,7 @@ function FormSection({ children, name = "Sections", section, questions, sectionI
             </div>
 
             <h2 className="text-xl self-start capitalize">{name}</h2>
-            <Droppable droppableId={`droppable-rows-${sectionId}`} type={"ROWS"}>
+            <Droppable droppableId={`droppable-rows-${sectionId}`} type={sectionId}>
               {(provided, snapshot) => (
                 <div className="w-full" ref={provided.innerRef} {...provided.droppableProps}>
                   {children}

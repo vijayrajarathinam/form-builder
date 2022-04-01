@@ -5,9 +5,7 @@ import FormColumn from "./FormColumn";
 import FormRow from "./FormRow";
 
 function FormComponent({ form, setForm, questions }) {
-  const isEmpty = function (arr) {
-    return Object.keys(arr || {}).length === 0;
-  };
+  const isEmpty = (arr) => Object.keys(arr || {}).length === 0;
 
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -19,17 +17,27 @@ function FormComponent({ form, setForm, questions }) {
 
   const onSectionDropEnd = ({ ...props }) => {
     if (!props.destination) return;
+    const startIndex = props.source.index;
+    const endIndex = props.destination.index;
+
     if (props.type === "SECTIONS") {
-      const startIndex = props.source.index;
-      const endIndex = props.destination.index;
       const arr = form.sections;
-      setForm((data) => ({
-        ...data,
-        struct: {
-          sections: reorder(arr, startIndex, endIndex),
+
+      // prettier-ignore
+      setForm((data) => ({ ...data, struct: { sections: reorder(arr, startIndex, endIndex)}}));
+    } else {
+      const arr = form.sections[props.type].rows;
+
+      // prettier-ignore
+      setForm((data) => ({ ...data, struct: {
+        sections: data.struct.sections.map((section, id) => {
+          if (id === props.type)
+            return { name: section.name, rows: reorder(arr, startIndex, endIndex)};
+          else return section;
+          }),
         },
       }));
-    } else console.log(props);
+    }
   };
 
   return (

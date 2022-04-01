@@ -4,7 +4,6 @@ import { Field } from "redux-form";
 
 function DropdownField({ label, text, meta: { touched, error }, isRequired, subText = null, options = [], ...props }) {
   const { logic } = props;
-  // console.log(logic);
 
   const form = useSelector((state) => state.form.form);
   React.useEffect(() => {
@@ -17,7 +16,6 @@ function DropdownField({ label, text, meta: { touched, error }, isRequired, subT
         if (form.values[label] && form.values[label] == value) console.log("true");
         else console.log("false");
       });
-    // console.log(logic.and);
   }, [form]);
 
   return (
@@ -29,7 +27,7 @@ function DropdownField({ label, text, meta: { touched, error }, isRequired, subT
       <Field
         name={label}
         component="select"
-        className={`w-full px-3 py-2 text-gray-800 border ${
+        className={`w-full px-3 py-2 text-gray-800 border border-gray-300 ${
           touched && error && "border-red-500"
         } rounded outline-none bg-gray-50 placeholder-grey-50`}
       >

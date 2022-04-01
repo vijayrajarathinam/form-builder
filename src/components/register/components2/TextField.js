@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+
 function TextField({ text, input, isRequired, label, type, meta: { touched, error }, ...props }) {
   const { logic } = props;
   const form = useSelector((state) => state.form.form);
@@ -41,7 +42,7 @@ function TextField({ text, input, isRequired, label, type, meta: { touched, erro
           {...input}
           placeholder={label}
           type={type}
-          className={`w-full px-3 py-2 text-gray-800 border ${
+          className={`w-full px-3 py-2 text-gray-800 border border-gray-300 ${
             touched && error && "border-red-500"
           } rounded outline-none bg-gray-50 placeholder-grey-50`}
         />
@@ -50,7 +51,6 @@ function TextField({ text, input, isRequired, label, type, meta: { touched, erro
     </div>
   );
 
-  console.log(logic.default, !andDisplay, !orDisplay);
   if (logic.default == "hide")
     if (!andDisplay && !orDisplay) return render();
     else return <></>;

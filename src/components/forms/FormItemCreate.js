@@ -1,10 +1,13 @@
 import React from "react";
+import Dragm from "dragm";
+import { v4 as uuid } from "uuid";
 import { XIcon } from "@heroicons/react/solid";
 import { motion, AnimatePresence } from "framer-motion";
 import { SaveIcon, SaveAsIcon, TrashIcon } from "@heroicons/react/outline";
-import LogicTable from "./LogicTable";
-import DropDown from "../commons/Dropdown";
 import useMediaQuery from "../../hooks/useMediaQuery";
+import DropDown from "../commons/Dropdown";
+import LogicTable from "./LogicTable";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 const options = [
   { id: 1, name: "Text Field", value: "text" },
@@ -32,10 +35,12 @@ const defaultItem = {
 
 function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, handleClose }) {
   const isEmpty = Object.keys(item).length === 0;
+  const containerRef = React.useRef(null);
   const [message, setMessage] = React.useState("");
   const isSmall = useMediaQuery("(min-width: 480px)");
   const modal = "fixed top-0 left-0 w-full h-full bg-black/[0.6]";
   const [input, setInput] = React.useState(isEmpty ? defaultItem : item);
+  const updateTransform = (transformStr) => (containerRef.current.style.transform = transformStr);
 
   const variants = {
     start: { y: isSmall ? 50 : -10, x: "-50%", transition: { duration: 0.5 } },
@@ -113,15 +118,6 @@ function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, h
     const value = target.value;
 
     setInput((input) => {
-      console.log({
-        ...input,
-        ["logic"]: {
-          ...input.logic,
-          [title]: input.logic[title].map((_, rId) => {
-            return rowId == rId ? { ..._, ["value"]: "" + value } : _;
-          }),
-        },
-      });
       return {
         ...input,
         ["logic"]: {
@@ -299,16 +295,58 @@ function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, h
     );
   }
 
+  const onDragStart = (result) => {};
+
+  const onDragEnd = (result, logics, setInput) => {
+    if (!result.destination) return;
+    const { source, destination } = result;
+    console.log(result.type);
+    if (source.droppableId !== destination.droppableId) {
+      // console.log(source.droppableId, destination.droppableId);
+      const sourceTable = logics[source.droppableId];
+      const destinTable = logics[destination.droppableId];
+      const sourceLogics = [...sourceTable];
+      const destinLogics = [...destinTable];
+      const [removed] = sourceLogics.splice(source.index, 1);
+      destinLogics.splice(destination.index, 0, removed);
+
+      // prettier-ignore
+      setInput({
+        ...input, logic: {
+          ...input.logic,
+          [source.droppableId]: sourceLogics,
+          [destination.droppableId]: destinLogics,
+        },
+      });
+    } else {
+      const logic = logics[source.droppableId];
+      const copiedItems = [...logic];
+      console.log(logic);
+      const [removed] = copiedItems.splice(source.index, 1);
+      console.log(removed);
+      copiedItems.splice(destination.index, 0, removed);
+      console.log(copiedItems);
+      setInput({ ...input, logic: { ...input.logic, [source.droppableId]: [...copiedItems] } });
+    }
+  };
+
   return (
-    <AnimatePresence>
+    <AnimatePresence exitBeforeEnter>
       <div className={modal + ` ${show ? "block" : "hidden"}`} style={{ zIndex: 1 }}>
-        <motion.section variants={variants} animate={show ? "start" : "stop"} className="question-modal">
-          <div className="flex items-center justify-between ">
-            <p className="text-xl">Account</p>
-            <button onClick={handleClose}>
-              <XIcon className="w-6 h-6 text-gray-600" />
-            </button>
-          </div>
+        <motion.section
+          variants={variants}
+          animate={show ? "start" : "stop"}
+          ref={containerRef}
+          className="question-modal"
+        >
+          <Dragm updateTransform={updateTransform}>
+            <div className="flex items-center justify-between ">
+              <p className="text-xl">Account</p>
+              <button onClick={handleClose} className="cursor-pointer">
+                <XIcon className="w-6 h-6 text-gray-600" />
+              </button>
+            </div>
+          </Dragm>
           <div className="overflow-y-scroll scrollbar-hide h-[27rem]">
             <div className="flex flex-col items-start gap-5 my-5 h-auto">
               {message.length != 0 && <p className="text-red-500 text-xs w-full italic mt-3 text-center">{message}</p>}
@@ -399,26 +437,32 @@ function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, h
                       />
                       {/* </div> */}
                     </div>
-                    {/* table and */}
-                    <LogicTable
-                      title="and"
-                      addRow={addRow}
-                      deleteRow={deleteRow}
-                      onLogicOptionChange={onLogicOptionChange}
-                      rows={input.logic.and}
-                      questions={questions}
-                      onValueChange={onValueChange}
-                    />
-                    {/* table or */}
-                    <LogicTable
-                      title="or"
-                      addRow={addRow}
-                      deleteRow={deleteRow}
-                      onLogicOptionChange={onLogicOptionChange}
-                      rows={input.logic.or}
-                      questions={questions}
-                      onValueChange={onValueChange}
-                    />
+
+                    <DragDropContext
+                      onDragStart={(props) => onDragStart(props)}
+                      onDragEnd={({ ...result }) => onDragEnd(result, input.logic, setInput)}
+                    >
+                      {/* table and */}
+                      <LogicTable
+                        title="and"
+                        addRow={addRow}
+                        deleteRow={deleteRow}
+                        onLogicOptionChange={onLogicOptionChange}
+                        rows={input.logic.and}
+                        questions={questions}
+                        onValueChange={onValueChange}
+                      />
+                      {/* table or */}
+                      <LogicTable
+                        title="or"
+                        addRow={addRow}
+                        deleteRow={deleteRow}
+                        onLogicOptionChange={onLogicOptionChange}
+                        rows={input.logic.or}
+                        questions={questions}
+                        onValueChange={onValueChange}
+                      />
+                    </DragDropContext>
                   </div>
                 </details>
               </div>
