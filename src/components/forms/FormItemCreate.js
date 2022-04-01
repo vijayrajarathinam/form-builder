@@ -1,13 +1,12 @@
 import React from "react";
 import Dragm from "dragm";
-import { v4 as uuid } from "uuid";
 import { XIcon } from "@heroicons/react/solid";
+import { DragDropContext } from "react-beautiful-dnd";
 import { motion, AnimatePresence } from "framer-motion";
 import { SaveIcon, SaveAsIcon, TrashIcon } from "@heroicons/react/outline";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import DropDown from "../commons/Dropdown";
 import LogicTable from "./LogicTable";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 const options = [
   { id: 1, name: "Text Field", value: "text" },
@@ -295,14 +294,10 @@ function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, h
     );
   }
 
-  const onDragStart = (result) => {};
-
   const onDragEnd = (result, logics, setInput) => {
     if (!result.destination) return;
     const { source, destination } = result;
-    console.log(result.type);
     if (source.droppableId !== destination.droppableId) {
-      // console.log(source.droppableId, destination.droppableId);
       const sourceTable = logics[source.droppableId];
       const destinTable = logics[destination.droppableId];
       const sourceLogics = [...sourceTable];
@@ -321,11 +316,8 @@ function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, h
     } else {
       const logic = logics[source.droppableId];
       const copiedItems = [...logic];
-      console.log(logic);
       const [removed] = copiedItems.splice(source.index, 1);
-      console.log(removed);
       copiedItems.splice(destination.index, 0, removed);
-      console.log(copiedItems);
       setInput({ ...input, logic: { ...input.logic, [source.droppableId]: [...copiedItems] } });
     }
   };
@@ -438,10 +430,7 @@ function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, h
                       {/* </div> */}
                     </div>
 
-                    <DragDropContext
-                      onDragStart={(props) => onDragStart(props)}
-                      onDragEnd={({ ...result }) => onDragEnd(result, input.logic, setInput)}
-                    >
+                    <DragDropContext onDragEnd={({ ...result }) => onDragEnd(result, input.logic, setInput)}>
                       {/* table and */}
                       <LogicTable
                         title="and"

@@ -97,7 +97,7 @@ export default function ({ title, questions, rows, addRow, deleteRow, onLogicOpt
                     >
                       {rows.length ? (
                         rows.map((row, rowId) => (
-                          <Draggable key={rowId} index={rowId} draggableId={`draggable-tr-${rowId}`}>
+                          <Draggable key={rowId} index={rowId} draggableId={`draggable-tr-${title}-${rowId}`}>
                             {(provided, snapshot) => {
                               return (
                                 <tr
