@@ -14,8 +14,8 @@ export default function ({ title, questions, rows, addRow, deleteRow, onLogicOpt
         return displayCheckbox(rest, onChange);
       // case "checkbox":
       //   return displayOptions();
-      // case "radio":
-      //   return displayOptions();
+      case "radio":
+        return displayOptions(rest, onChange);
       // case "number":
       //   return displayNumberOptions();
       // default:
@@ -42,6 +42,7 @@ export default function ({ title, questions, rows, addRow, deleteRow, onLogicOpt
 
   const displayCheckbox = (props, onChange) => (
     <select
+      {...props}
       onChange={onChange}
       className="p-2 text-sm font-medium text-gray-900 whitespace-nowrap dark:text-white leading-tight bg-gray-200 border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
     >

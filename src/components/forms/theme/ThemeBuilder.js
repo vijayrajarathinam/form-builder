@@ -17,7 +17,7 @@ export default function ({ handleClose, show, form, setForm, ...props }) {
   const [loading, setLoading] = useState(false);
   const useIsSmall = () => useMediaQuery("(min-width: 480px)");
   const isSmall = useIsSmall();
-  const modal = "fixed top-0 left-0 w-full h-full bg-black/[0.6]";
+  const modal = "fixed top-0 left-0 w-full h-full bg-black/[0.6] cursor-pointer";
 
   useEffect(() => {
     const close = (e) => e.keyCode === 27 && handleClose(e);
@@ -86,7 +86,7 @@ export default function ({ handleClose, show, form, setForm, ...props }) {
         <motion.section
           variants={variants}
           animate={show ? "start" : "stop"}
-          className=" fixed rounded-sm bg-[#e7e6eb] w-full sm:w-3/4 md:w-1/3 h-auto left-1/2"
+          className="cursor-default fixed rounded-sm bg-[#e7e6eb] w-full sm:w-3/4 md:w-1/3 h-auto left-1/2"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-center p-4">

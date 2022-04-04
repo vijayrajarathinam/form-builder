@@ -4,12 +4,12 @@ import { PlusIcon } from "@heroicons/react/outline";
 import CustomeInputField from "./CustomeInputField";
 import Modal from "./FormItemCreate";
 
-function FormColumn({ item = {}, questions, setData, sectionId, rowId, columnId }) {
+function FormColumn({ item = {}, questions, save, setData, sectionId, rowId, columnId }) {
   const isEmpty = Object.keys(item).length === 0;
   const [show, onModal] = React.useState(false);
   const onButtonClick = () => onModal(true);
 
-  function onModalSubmit(item) {
+  function onModalSubmit(item, show) {
     setData((data) => {
       return {
         ...data,
@@ -29,7 +29,7 @@ function FormColumn({ item = {}, questions, setData, sectionId, rowId, columnId 
         },
       };
     });
-    onModal(false);
+    onModal(show ? show : false);
   }
 
   function onModalRemove() {
@@ -72,6 +72,7 @@ function FormColumn({ item = {}, questions, setData, sectionId, rowId, columnId 
       <Modal
         show={show}
         item={item}
+        save={save}
         questions={questions}
         onModalSubmit={onModalSubmit}
         onModalRemove={() => onModalRemove()}

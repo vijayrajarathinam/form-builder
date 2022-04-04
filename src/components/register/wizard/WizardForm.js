@@ -24,12 +24,21 @@ export default function WizardForm({ ...props }) {
 
   const createRecord = (values) => {
     return sleep(1000).then(() => {
-      if (!values.email)
-        throw new SubmissionError({ email: "This Field cannot be empty", _error: "This Field cannot be empty" });
+      const arr = [];
+      inputs.struct.sections.forEach((section) =>
+        section.rows.forEach((row) => row.columns.forEach((props) => arr.push(props)))
+      );
+      const userField = arr.find((ques) => ques.useAsUsername == true);
+
+      if (!values[userField.label])
+        throw new SubmissionError({
+          [userField.label]: "This Field cannot be empty",
+          _error: "This Field cannot be empty",
+        });
       else {
         setStatus("loading");
         const password = "Admin@12345";
-        const username = values.email;
+        const username = values[userField.label];
         createUserWithEmailAndPassword(auth, username, password)
           .then(async ({ user }) => {
             register(values, user.uid)
@@ -64,7 +73,7 @@ export default function WizardForm({ ...props }) {
                 {...props}
                 createRecord={createRecord}
                 page={page}
-                onSubmit={nextPage}
+                onSubmit={inputs.struct.sections.length == page ? createRecord : nextPage}
                 setPage={setPage}
                 section={section}
                 inputs={inputs}
@@ -79,7 +88,7 @@ export default function WizardForm({ ...props }) {
         <div className="absolute top-[50%] left-[50%] flex flex-col items-center transform -translate-x-[50%] -translate-y-[50%]">
           <CheckCircleIcon className="w-30 md:w-1/3 h-30 md:h-1/3 text-green-700" />
           <p className="text-center w-full md:w-2/3 leading-tighter tracking-tighter font-bold text-xl text-gray-700">
-            We have received your registration, Admin will be in touch with you shortly!
+            {inputs.success_message || "We have received your registration, Admin will be in touch with you shortly!"}
           </p>
         </div>
       </div>
@@ -90,7 +99,7 @@ export default function WizardForm({ ...props }) {
         <div className="absolute top-[50%] left-[50%] flex flex-col items-center transform -translate-x-[50%] -translate-y-[50%]">
           <XCircleIcon className="w-30 md:w-1/3 h-30 md:h-1/3 text-red-700" />
           <p className="text-center w-full md:w-2/3 leading-tighter tracking-tighter font-bold text-xl text-gray-700">
-            Somthing wrong contact support@melonin.com
+            {inputs.failure_message || "Somthing wrong contact support@melonin.com"}
           </p>
         </div>
       </div>
@@ -112,7 +121,7 @@ const Form = reduxForm({
   return (
     <form
       // onSubmit={inputs.struct.sections.length == page ? handleSubmit : nextPage}
-      onSubmit={handleSubmit(createRecord)}
+      onSubmit={handleSubmit}
       className="flex relative flex-col items-center gap-y-1 text-gray-500 p-3"
     >
       <h2 className="text-xl self-start capitalize">{section.name}</h2>

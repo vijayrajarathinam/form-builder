@@ -32,7 +32,7 @@ const defaultItem = {
   isRequired: false,
 };
 
-function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, handleClose }) {
+function FormItemCreate({ show, save, item, questions, onModalRemove, onModalSubmit, handleClose }) {
   const isEmpty = Object.keys(item).length === 0;
   const containerRef = React.useRef(null);
   const [message, setMessage] = React.useState("");
@@ -179,7 +179,7 @@ function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, h
   }
 
   const preModalSubmit = () => validate() && onModalSubmit(input);
-  const preModalSubmitAndContinue = () => validate();
+  const preModalSubmitAndContinue = () => onModalSubmit(input, true) && save();
 
   const renderSwitch = () => {
     switch (input.type) {
@@ -191,11 +191,31 @@ function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, h
         return displayOptions();
       case "number":
         return displayNumberOptions();
+      case "email":
+        return displayUsername();
       default:
         return displaySubtext();
     }
   };
 
+  function displayUsername() {
+    return (
+      <div className="md:flex md:items-center px-2 py-5 ">
+        <input
+          className="appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+          type="checkbox"
+          name="useAsUsername"
+          value={input.useAsUsername}
+          onChange={onInputChange}
+          tabIndex="1"
+          checked={input.useAsUsername}
+        />
+        <label className="inline-block text-gray-500 font-bold" for="flexCheckDefault">
+          Use As Username
+        </label>
+      </div>
+    );
+  }
   function displaySubtext() {
     return (
       <div className="md:flex md:items-center px-2 py-5 ">
@@ -326,16 +346,18 @@ function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, h
     <AnimatePresence exitBeforeEnter>
       <div className={modal + ` ${show ? "block" : "hidden"}`} style={{ zIndex: 1 }}>
         <motion.section
+          ref={containerRef}
           variants={variants}
           animate={show ? "start" : "stop"}
-          ref={containerRef}
           className="question-modal"
         >
           <Dragm updateTransform={updateTransform}>
             <div className="flex items-center justify-between ">
-              <p className="text-xl">Account</p>
+              <p className="text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400">
+                Define The Field
+              </p>
               <button onClick={handleClose} className="cursor-pointer">
-                <XIcon className="w-6 h-6 text-gray-600" />
+                <XIcon className="w-3 h-3 font-bold text-gray-600" />
               </button>
             </div>
           </Dragm>
@@ -396,6 +418,7 @@ function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, h
                   name="isRequired"
                   value={input.isRequired}
                   onChange={onInputChange}
+                  checked={input.isRequired}
                   id="flexCheckDefault"
                 />
                 <label className="form-check-label inline-block text-gray-500 font-bold" for="flexCheckDefault">
@@ -472,7 +495,7 @@ function FormItemCreate({ show, questions, item, onModalRemove, onModalSubmit, h
               className="inline-flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 md:py-2 px-5 text-sm rounded-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
             >
               <SaveAsIcon className="w-4 h-4" />
-              Save And Continue
+              Save All
             </button>
             <button
               onClick={onModalRemove}

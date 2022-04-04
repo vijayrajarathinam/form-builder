@@ -36,6 +36,7 @@ function FormRow({ children, addColumn, sectionId, rowId, rowProvided }) {
         struct: {
           sections: data.struct.sections.map((session, sid) => {
             return {
+              name: session.name,
               rows: session.rows.filter((row, rid) => {
                 return sid === sectionId && rowId === rid ? false : true;
               }),

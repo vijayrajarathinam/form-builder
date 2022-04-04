@@ -21,12 +21,21 @@ export default function ({ ...props }) {
 
   const createRecord = (values) => {
     return sleep(1000).then(() => {
-      if (!values.email)
-        throw new SubmissionError({ email: "This Field cannot be empty", _error: "This Field cannot be empty" });
+      const arr = [];
+      struct.sections.forEach((section) =>
+        section.rows.forEach((row) => row.columns.forEach((props) => arr.push(props)))
+      );
+      const userField = arr.find((ques) => ques.useAsUsername == true);
+
+      if (!values[userField.label])
+        throw new SubmissionError({
+          [userField.label]: "This Field cannot be empty",
+          _error: "This Field cannot be empty",
+        });
       else {
         setStatus("loading");
         const password = "Admin@12345";
-        const username = values.email;
+        const username = values[userField.label];
         createUserWithEmailAndPassword(auth, username, password)
           .then(async ({ user }) => {
             register(values, user.uid)
@@ -98,6 +107,7 @@ const Form = reduxForm({
                   text={props.text}
                   label={props.text}
                   logic={props.logic}
+                  subText={props.subText}
                   {...props}
                   component={({ ...props }) => middleware(props)}
                 />

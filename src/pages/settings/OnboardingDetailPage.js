@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import * as outlineIcons from "@heroicons/react/outline";
@@ -10,7 +10,7 @@ import FormComponent from "../../components/forms/FormComponent";
 import Breadcrumb from "../../components/commons/Breadcrumb";
 import Button from "../../components/commons/Button";
 
-const { XIcon, DocumentTextIcon, PlusCircleIcon, DotsVerticalIcon } = outlineIcons;
+const { XIcon, DocumentTextIcon, ExternalLinkIcon, PlusCircleIcon, DotsVerticalIcon } = outlineIcons;
 const ctx = new AudioContext();
 
 function OnboardingDetailPage() {
@@ -33,6 +33,7 @@ function OnboardingDetailPage() {
 
   const questions = useMemo(() => {
     const arr = [];
+    console.log(form);
     if (!form.struct.sections) return arr;
     if (form.status == "draft") {
       form.draftStruct.sections.forEach((section) =>
@@ -47,7 +48,10 @@ function OnboardingDetailPage() {
   }, [form?.struct]);
 
   useEffect(() => {
-    if (data && loading === false) setForm(data.find((d) => d.id === formId));
+    if (data && loading === false) {
+      console.log(data.find((d) => d.id === formId));
+      setForm(data.find((d) => d.id === formId));
+    }
   }, [data, loading]);
 
   const isEmpty = function (arr) {
@@ -78,8 +82,40 @@ function OnboardingDetailPage() {
     });
   }
 
+  function validate(form) {
+    // console.log(questions)
+    const arr = [];
+    form.struct.sections.forEach((section) =>
+      section.rows.forEach((row) => row.columns.forEach((props) => arr.push(props)))
+    );
+
+    // if (!arr) {
+    //   toast.error("Complete the form ");
+    //   return true;
+    // }
+    const EmailFields = arr.filter((ques) => ques.type == "email");
+    if (!EmailFields) {
+      toast.error("One EmailField should be in the form");
+      return true;
+    }
+
+    const MandatoryEmailFields = EmailFields.filter((ques) => ques.isRequired == true);
+    if (!MandatoryEmailFields) {
+      toast.error("One EmailField is mandatory");
+      return true;
+    }
+
+    if (!MandatoryEmailFields.find((field) => field.useAsUsername == true)) {
+      toast.error("One EmailField must be used as username");
+      return true;
+    }
+
+    return false;
+  }
+
   function save() {
     const activeForm = { ...form, ["status"]: "active" };
+    if (validate(activeForm)) return;
     dispatch(modifyForm(activeForm, formId));
     toast.success("submitted successfully.....");
   }
@@ -117,7 +153,12 @@ function OnboardingDetailPage() {
       />
 
       <div className="flex flex-col h-20 md:h-10 md:flex-row justify-between mt-5">
-        <h3 className="font-bold text-3xl">Form Builder</h3>
+        <div className="flex justify-between items-center gap-2">
+          <h3 className="font-bold text-3xl "> Form Builder</h3>
+          <Link to={`/register/${formId}`} target="_blank">
+            <ExternalLinkIcon className="w-7 text-blue-400" />
+          </Link>
+        </div>
         <div className="flex gap-x-2">
           <Button.Default Icon={PlusCircleIcon} text="Add Section" onClick={() => showModal(true)} />
           <div className="h-10 md:h-15 relative flex h-15">
@@ -128,7 +169,7 @@ function OnboardingDetailPage() {
               className="inline-flex items-center bg-lime-600 hover:bg-lime-700 text-white font-bold py-2 pl-5 pr-2 text-sm rounded-l-lg shadow outline-none gap-x-1 focus:outline-none focus:shadow-outline"
             >
               <DocumentTextIcon className="w-4 h-4" />
-              Save
+              Submit The Form
             </button>
             <button
               data-dropdown-toggle="dropdown"
@@ -195,9 +236,10 @@ function OnboardingDetailPage() {
           questions={questions}
           form={form.status == "draft" ? form.draftStruct : form.struct}
           setForm={setForm}
+          save={save}
         />
         <CreateSectionModal show={modal} handleClose={handleClose} addSection={addSection} />
-        <ThemeBuilder form={form} setForm={setForm} save={save} handleClose={(e) => setTheme(false)} show={theme} />
+        <ThemeBuilder form={form} save={save} setForm={setForm} handleClose={(e) => setTheme(false)} show={theme} />
       </div>
     </motion.div>
   );

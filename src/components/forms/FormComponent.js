@@ -4,7 +4,7 @@ import FormSection from "./FormSection";
 import FormColumn from "./FormColumn";
 import FormRow from "./FormRow";
 
-function FormComponent({ form, setForm, questions }) {
+function FormComponent({ form, save, setForm, questions }) {
   const isEmpty = (arr) => Object.keys(arr || {}).length === 0;
 
   const reorder = (list, startIndex, endIndex) => {
@@ -54,7 +54,7 @@ function FormComponent({ form, setForm, questions }) {
                         <FormRow key={rid} sectionId={sid} rowId={rid} addColumn={setForm}>
                           {row.columns.map((column, cid) =>
                             //prettier-ignore
-                            <FormColumn questions={questions} item={column} sectionId={sid} rowId={rid} columnId={cid} setData={setForm} key={cid} />
+                            <FormColumn questions={questions} item={column} sectionId={sid} rowId={rid} columnId={cid} save={save} setData={setForm} key={cid} />
                           )}
                         </FormRow>
                       ))}

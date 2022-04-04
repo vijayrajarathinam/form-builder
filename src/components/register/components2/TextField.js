@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-function TextField({ text, input, isRequired, label, type, meta: { touched, error }, ...props }) {
+function TextField({ text, input, subText, isRequired, label, type, meta: { touched, error }, ...props }) {
   const { logic } = props;
   const form = useSelector((state) => state.form.form);
 
@@ -9,7 +9,7 @@ function TextField({ text, input, isRequired, label, type, meta: { touched, erro
     let notValid = true;
     if (logic?.and.length !== 0 && form?.values) {
       for (let an of logic.and) {
-        let value = an.value,
+        let value = an.field.type == "checkbox" ? !!an.value : an.value,
           label = an.field.label;
         if (form.values[label] && form.values[label] == value) notValid = false;
         else notValid = true;
@@ -47,6 +47,11 @@ function TextField({ text, input, isRequired, label, type, meta: { touched, erro
           } rounded outline-none bg-gray-50 placeholder-grey-50`}
         />
         {touched && error && <p className="text-red-500 text-xs italic mt-1 ml-1">{error}</p>}
+        {subText ? (
+          <p className="text-gray-500 text-xs italic mt-1 ml-1">{subText}</p>
+        ) : (
+          <p className="invisible">subtext</p>
+        )}
       </div>
     </div>
   );
