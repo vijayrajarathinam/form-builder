@@ -116,7 +116,17 @@ const Form = reduxForm({
 })(function ({ ...props }) {
   const previousPage = () => setPage((page) => (page > 1 ? page - 1 : page));
 
-  const { handleSubmit, createRecord, inputs, section, pristine, submitting, page, setPage } = props;
+  const { handleSubmit, inputs, section, pristine, submitting, page, setPage } = props;
+
+  function _hex_is_light(color) {
+    if (!color) return true;
+    const hex = color.replace("#", "");
+    const c_r = parseInt(hex.substr(0, 2), 16);
+    const c_g = parseInt(hex.substr(2, 2), 16);
+    const c_b = parseInt(hex.substr(4, 2), 16);
+    const brightness = (c_r * 299 + c_g * 587 + c_b * 114) / 1000;
+    return brightness > 155;
+  }
 
   return (
     <form
@@ -148,7 +158,11 @@ const Form = reduxForm({
         </button>
         <button
           type="submit"
-          className="text-white cursor-pointer bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className={`text-white cursor-pointer  font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800`}
+          style={{
+            backgroundColor: inputs?.title_color || "#f3f4f6",
+            color: _hex_is_light(inputs?.title_color) ? "#374151" : "#ffffff",
+          }}
           {...(inputs.struct.sections.length == page && { disabled: pristine || submitting })}
         >
           {inputs.struct.sections.length == page ? "Submit" : "Next"}

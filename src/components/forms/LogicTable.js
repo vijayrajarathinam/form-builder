@@ -12,14 +12,10 @@ export default function ({ title, questions, rows, addRow, deleteRow, onLogicOpt
         return displayTextField(rest, onChange);
       case "checkbox":
         return displayCheckbox(rest, onChange);
-      // case "checkbox":
-      //   return displayOptions();
       case "radio":
         return displayOptions(rest, onChange);
-      // case "number":
-      //   return displayNumberOptions();
-      // default:
-      //   return displaySubtext();
+      default:
+        return displayTextField(rest, onChange);
     }
   };
 

@@ -37,7 +37,7 @@ function RegisterWrapper({ data }) {
           <h2 className="text-3xl" style={{ marginTop: data.icon && 30 }}>
             {data?.name}
           </h2>
-          <p className="self-start text-sm">Please fill all the required fields</p>
+          <p className="self-start text-sm">{data.subText || "Please fill all the required fields"}</p>
         </div>
         {isWizard ? <WizardForm inputs={data} /> : <RegisterContainer inputs={data} />}
       </div>

@@ -115,7 +115,7 @@ export default function ({ handleClose, show, form, setForm, ...props }) {
               </div>
               <div className="flex w-full flex-col p-4 hover:bg-black/[0.02]">
                 <label
-                  for="sub_text"
+                  for="subText"
                   className="inline-flex mb-2 capitalize text-[#7c7a8a] font-bold md:text-right md:mb-1 pr-4"
                 >
                   Sub Text
@@ -123,7 +123,7 @@ export default function ({ handleClose, show, form, setForm, ...props }) {
                 <div>
                   <input
                     type="text"
-                    name="sub_text"
+                    name="subText"
                     value={form?.subText}
                     onChange={onInputChange}
                     className={`w-full px-3 py-2 text-gray-800 border border-gray-300 rounded outline-none bg-gray-50 placeholder-grey-50`}
@@ -133,7 +133,7 @@ export default function ({ handleClose, show, form, setForm, ...props }) {
               <div className="flex items-center p-4 hover:bg-black/[0.02]">
                 <div className="grow">
                   <label for="bg_color" className="inline-flex capitalize text-[#7c7a8a] font-bold md:text-right pr-4">
-                    Page Background
+                    Primary Color
                   </label>
                 </div>
                 <div className="">
@@ -153,7 +153,7 @@ export default function ({ handleClose, show, form, setForm, ...props }) {
                     for="title_color"
                     className="inline-flex mb-2 capitalize text-[#7c7a8a] font-bold md:text-right md:mb-1 pr-4"
                   >
-                    Title Color
+                    Secondary Color
                   </label>
                 </div>
                 <div className="">

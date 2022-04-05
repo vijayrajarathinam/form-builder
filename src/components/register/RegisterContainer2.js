@@ -9,7 +9,7 @@ import { auth } from "../../firebase";
 
 export default function ({ ...props }) {
   const {
-    inputs: { struct, formStatus },
+    inputs: { struct, title_color, formStatus },
   } = props;
   const [status, setStatus] = useState("loading");
 
@@ -47,7 +47,8 @@ export default function ({ ...props }) {
     });
   };
 
-  if (status == "progress") return <Form {...props} createRecord={createRecord} struct={struct} />;
+  if (status == "progress")
+    return <Form {...props} title_color={title_color} createRecord={createRecord} struct={struct} />;
   else if (status == "success") {
     return (
       <div className="relative w-full h-[50vh]">
@@ -91,8 +92,18 @@ const Form = reduxForm({
   form: "form",
   validate,
 })(function ({ ...props }) {
-  const { struct, handleSubmit, createRecord, submitting } = props;
-  // console.log(props);
+  const { struct, title_color, handleSubmit, createRecord, submitting } = props;
+
+  function _hex_is_light(color) {
+    if (!color) return true;
+    const hex = color.replace("#", "");
+    const c_r = parseInt(hex.substr(0, 2), 16);
+    const c_g = parseInt(hex.substr(2, 2), 16);
+    const c_b = parseInt(hex.substr(4, 2), 16);
+    const brightness = (c_r * 299 + c_g * 587 + c_b * 114) / 1000;
+    return brightness > 155;
+  }
+  console.log(props);
   return (
     <form onSubmit={handleSubmit(createRecord)} className="flex relative flex-col mx-3 gap-y-1 text-gray-500 py-3">
       {struct?.sections?.map((section) => (
@@ -122,6 +133,10 @@ const Form = reduxForm({
           type="submit"
           disabled={submitting}
           className="text-white cursor-pointer bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          style={{
+            backgroundColor: title_color || "#f3f4f6",
+            color: _hex_is_light(title_color) ? "#374151" : "#ffffff",
+          }}
         >
           Submit
         </button>
